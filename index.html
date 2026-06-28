@@ -5,7 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.png" type="image/png">
+    
+    <!-- SEO & Open Graph -->
     <title>Kama Creative - Produk Digital</title>
+    <meta name="description" content="Temukan berbagai produk digital premium, template, desain, dan kelas online dari Kama Creative.">
+    <meta property="og:title" content="Kama Creative - Produk Digital">
+    <meta property="og:description" content="Kumpulan produk digital dan layanan dari Kama Creative.">
+    <meta property="og:image" content="favicon.png">
+    <meta property="og:url" content="https://store.kamacreative.my.id">
+    
+    <!-- Facebook Pixel Placeholder -->
+    <!-- 
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'MASUKKAN_PIXEL_ID_ANDA_DISINI');
+    fbq('track', 'PageView');
+    </script>
+    -->
+    
     <!-- Tambahkan Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,10 +38,29 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* CSS Variables untuk Tema */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+            --header-bg: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            --border-color: rgba(0,0,0,0.1);
+        }
+        
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --card-bg: #1e293b;
+            --header-bg: linear-gradient(135deg, #1e1b4b 0%, #172554 100%);
+            --border-color: rgba(255,255,255,0.1);
+        }
+
         /* Global */
         body {
-            background-color: #f8f9fa;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .d-none {
@@ -129,11 +172,11 @@
         }
 
         .category-btn {
-            background: #fff;
-            border: 1px solid #e2e8f0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 30px;
             padding: 10px 24px;
-            color: #475569;
+            color: var(--text-color);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
@@ -156,7 +199,7 @@
         }
 
         .product-card {
-            background: #fff;
+            background: var(--card-bg);
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
@@ -164,7 +207,7 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            border: 1px solid #f1f5f9;
+            border: 1px solid var(--border-color);
             position: relative;
         }
         
@@ -232,7 +275,7 @@
             font-size: 1.2rem;
             font-weight: 800;
             margin-bottom: 12px;
-            color: #1e293b;
+            color: var(--text-color);
             line-height: 1.4;
         }
 
@@ -393,6 +436,11 @@
 
 <body>
 
+    <!-- TOMBOL TEMA (DARK MODE) -->
+    <button id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-light shadow-sm" style="position: fixed; top: 20px; right: 20px; z-index: 1000; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
     <!-- LOADER -->
     <div id="fullPageLoader" class="d-none">
         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
@@ -420,14 +468,40 @@
 
         <!-- Main Content -->
         <div class="container mt-5">
-            <!-- Categories -->
-            <div class="category-filter mb-5" id="publicCategoryContainer">
-                <!-- Rendered by JS -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <!-- Categories -->
+                <div class="category-filter flex-grow-1 mb-0 pb-2" id="publicCategoryContainer">
+                    <!-- Rendered by JS -->
+                </div>
+                <!-- Sort Dropdown -->
+                <div class="pb-2">
+                    <select class="form-select border-0 shadow-sm" id="sortSelect" onchange="renderPublicProducts()" style="min-width: 180px; background: var(--card-bg); color: var(--text-color); border-radius: 20px;">
+                        <option value="default">🔥 Terbaru / Default</option>
+                        <option value="murah">💸 Harga Termurah</option>
+                        <option value="mahal">💎 Harga Termahal</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Products Grid -->
             <div class="row g-4" id="publicProductGrid">
                 <!-- Rendered by JS -->
+            </div>
+        </div>
+
+        <!-- Testimonial Section -->
+        <div class="container mt-5 pt-5 pb-5 border-top d-none" id="publicTestimonialSection">
+            <h2 class="text-center fw-bold mb-5">Apa Kata Mereka?</h2>
+            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" id="testimonialContainer">
+                    <!-- Rendered by JS -->
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev" style="width: 5%; justify-content: flex-start;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: var(--card-bg); border-radius: 50%; padding: 20px;"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next" style="width: 5%; justify-content: flex-end;">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: var(--card-bg); border-radius: 50%; padding: 20px;"></span>
+                </button>
             </div>
         </div>
 
@@ -489,6 +563,9 @@
                 <a class="nav-item-custom" onclick="showPage('produk', this)">
                     <i class="fas fa-box"></i> Kelola Produk
                 </a>
+                <a class="nav-item-custom" onclick="showPage('testimoni', this)">
+                    <i class="fas fa-comment-dots"></i> Kelola Testimoni
+                </a>
             </div>
             <div class="mt-auto mb-3">
                 <a class="nav-item-custom text-danger" onclick="logout()">
@@ -526,6 +603,12 @@
                         <div class="card-dashboard">
                             <h3 id="dashTotalKategori">0</h3>
                             <div class="text-muted">Total Kategori</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-dashboard">
+                            <h3 id="dashTotalTestimoni">0</h3>
+                            <div class="text-muted">Total Testimoni</div>
                         </div>
                     </div>
                 </div>
@@ -587,8 +670,73 @@
                 </div>
             </div>
 
+        <!-- Page: Testimoni -->
+            <div id="page-testimoni" class="app-page d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4>Kelola Testimoni</h4>
+                    <button class="btn btn-primary" onclick="openTestimoniModal()"><i class="fas fa-plus"></i> Tambah Testimoni</button>
+                </div>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Avatar</th>
+                                        <th>Nama & Peran</th>
+                                        <th>Isi Testimoni</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="testimoniTableBody">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </section>
+
+    <!-- Modal Testimoni -->
+    <div class="modal fade" id="modalTestimoni" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formTestimoni" onsubmit="saveTestimoni(event)">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTestimoniTitle">Tambah Testimoni</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="testiId">
+                        <div class="mb-3">
+                            <label class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="testiNama" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Peran / Pekerjaan</label>
+                            <input type="text" class="form-control" id="testiPeran" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Isi Testimoni</label>
+                            <textarea class="form-control" id="testiTeks" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Avatar Profil</label>
+                            <input type="file" class="form-control" id="testiAvatarFile" accept="image/*">
+                            <input type="hidden" id="testiAvatarUrl">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" id="btnSaveTestimoni">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Detail Produk Public -->
     <div class="modal fade" id="modalPublicDetail" tabindex="-1">
@@ -612,6 +760,7 @@
                     </div>
                     <div class="p-4">
                         <h3 class="fw-bold mb-2" id="detailNama">Nama Produk</h3>
+                        <div id="detailPromoTimer" class="promo-timer mb-2 d-none" style="font-size:0.9rem; color:#ef4444; font-weight:700;"><i class="fas fa-clock"></i> Promo berakhir: <span></span></div>
                         <div class="mb-3">
                             <span id="detailHargaCoret" class="text-muted text-decoration-line-through me-2" style="font-size: 1.1rem;"></span>
                             <span id="detailHarga" class="fw-bold text-danger" style="font-size: 1.5rem;"></span>
@@ -684,6 +833,10 @@
                                 <label class="form-label">Harga Asli/Coret (Opsional)</label>
                                 <input type="number" class="form-control" id="prodHargaCoret">
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Batas Waktu Promo (Opsional)</label>
+                                <input type="datetime-local" class="form-control" id="prodBatasPromo">
+                            </div>
                             <div class="col-12 mb-3">
                                 <label class="form-label">Upload Gambar Produk (Maks. 5 Foto)</label>
                                 <input type="file" class="form-control" id="prodGambarFile" accept="image/*" multiple onchange="previewImages()">
@@ -713,6 +866,23 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Tema / Dark Mode
+        function toggleTheme() {
+            var currentTheme = document.documentElement.getAttribute('data-theme');
+            var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            var icon = document.getElementById('themeIcon');
+            if(icon) icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        var savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        window.addEventListener('DOMContentLoaded', function() {
+            var icon = document.getElementById('themeIcon');
+            if(icon) icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
         (function () {
             'use strict';
 
@@ -725,6 +895,7 @@
 
             var mockCategories = [];
             var mockProducts = [];
+            var mockTestimonials = [];
 
             function loadDataFromDatabase() {
                 showFullPageLoading(true);
@@ -734,12 +905,15 @@
                         if (res.status === 'success') {
                             mockCategories = res.data.categories || [];
                             mockProducts = res.data.products || [];
+                            mockTestimonials = res.data.testimonials || [];
                             
                             renderPublicCategories();
                             renderPublicProducts();
+                            renderPublicTestimonials();
                             if(activePage === 'dashboard') loadPageData('dashboard');
                             if(activePage === 'kategori') renderKategoriTable();
                             if(activePage === 'produk') renderProdukTable();
+                            if(activePage === 'testimoni') renderTestimoniTable();
                         } else {
                             console.error('Error fetching data:', res.message);
                         }
@@ -872,11 +1046,40 @@
                 if (pageName === 'dashboard') {
                     document.getElementById('dashTotalProduk').innerText = mockProducts.length;
                     document.getElementById('dashTotalKategori').innerText = mockCategories.length;
+                    var elTesti = document.getElementById('dashTotalTestimoni');
+                    if (elTesti) elTesti.innerText = mockTestimonials.length;
                 } else if (pageName === 'kategori') {
                     renderKategoriTable();
                 } else if (pageName === 'produk') {
                     renderProdukTable();
+                } else if (pageName === 'testimoni') {
+                    renderTestimoniTable();
                 }
+            }
+
+            function renderPublicTestimonials() {
+                var section = document.getElementById('publicTestimonialSection');
+                var container = document.getElementById('testimonialContainer');
+                if (mockTestimonials.length === 0) {
+                    section.classList.add('d-none');
+                    return;
+                }
+                section.classList.remove('d-none');
+                var html = '';
+                mockTestimonials.forEach(function(t, idx) {
+                    var active = idx === 0 ? 'active' : '';
+                    var avatar = t.avatar ? escapeHTML(t.avatar) : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(t.nama) + '&background=random';
+                    html += `
+                    <div class="carousel-item ${active}">
+                        <div class="d-flex flex-column align-items-center text-center p-4">
+                            <img src="${avatar}" alt="${escapeHTML(t.nama)}" class="rounded-circle mb-3 shadow" style="width: 100px; height: 100px; object-fit: cover; border: 4px solid var(--card-bg);">
+                            <h5 class="fw-bold mb-1">${escapeHTML(t.nama)}</h5>
+                            <p class="text-muted mb-4 small">${escapeHTML(t.peran)}</p>
+                            <p class="lead fst-italic" style="max-width: 700px;">"${escapeHTML(t.teks)}"</p>
+                        </div>
+                    </div>`;
+                });
+                container.innerHTML = html;
             }
 
             // ================= PUBLIC LANDING PAGE LOGIC =================
@@ -921,6 +1124,16 @@
                     var matchSearch = p.nama.toLowerCase().indexOf(searchQuery) > -1 || p.deskripsi.toLowerCase().indexOf(searchQuery) > -1;
                     return matchCategory && matchSearch;
                 });
+                
+                var sortSelect = document.getElementById('sortSelect');
+                if (sortSelect) {
+                    var sortVal = sortSelect.value;
+                    if (sortVal === 'murah') {
+                        filtered.sort(function(a, b) { return a.harga - b.harga; });
+                    } else if (sortVal === 'mahal') {
+                        filtered.sort(function(a, b) { return b.harga - a.harga; });
+                    }
+                }
 
                 if (filtered.length === 0) {
                     container.innerHTML = '<div class="col-12 text-center text-muted py-5"><i class="fas fa-box-open fa-3x mb-3 text-light" style="font-size:4rem;color:#cbd5e1!important;"></i><br><h4 class="mt-3">Produk tidak ditemukan</h4><p>Coba gunakan kata kunci lain atau pilih kategori Semua.</p></div>';
@@ -934,6 +1147,10 @@
                     }
                     var imgHtml = coverImg ? '<img src="' + escapeHTML(coverImg) + '" class="product-img" alt="Product">' : '<div class="product-img"><i class="fas fa-image"></i></div>';
                     var badgeHtml = p.badge ? '<div class="badge-bestseller">' + escapeHTML(p.badge) + '</div>' : '';
+                    var promoHtml = '';
+                    if (p.batasPromo) {
+                        promoHtml = '<div class="promo-timer" data-time="' + escapeHTML(p.batasPromo) + '" style="font-size:0.85rem; color:#ef4444; font-weight:700; margin-bottom:10px;"><i class="fas fa-clock"></i> <span>Menghitung...</span></div>';
+                    }
 
                     html += `
             <div class="col-md-6 col-lg-4 mb-3">
@@ -945,6 +1162,7 @@
                 <div class="product-body">
                   <div class="product-category">${escapeHTML(p.kategori)}</div>
                   <h5 class="product-title">${escapeHTML(p.nama)}</h5>
+                  ${promoHtml}
                   <p class="product-desc text-truncate" style="max-height: 3em; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; white-space: normal;">${escapeHTML(p.deskripsi)}</p>
                   <div class="product-price">
                     ${p.hargaCoret > 0 ? '<del style="color: #94a3b8; font-size: 0.95rem; font-weight: 500; margin-right: 8px;">' + formatRupiah(p.hargaCoret) + '</del>' : '<small>Harga Promo</small>'}
@@ -985,6 +1203,15 @@
                 }
                 document.getElementById('detailHarga').innerText = formatRupiah(p.harga);
                 
+                var promoEl = document.getElementById('detailPromoTimer');
+                if (p.batasPromo) {
+                    promoEl.classList.remove('d-none');
+                    promoEl.setAttribute('data-time', p.batasPromo);
+                } else {
+                    promoEl.classList.add('d-none');
+                    promoEl.removeAttribute('data-time');
+                }
+                
                 var btnBeli = document.getElementById('btnDetailBeli');
                 btnBeli.onclick = function() {
                     buyProduct(p.nama, p.link);
@@ -1014,6 +1241,31 @@
                 
                 modalPublicDetailObj.show();
             };
+
+            // Countdown Timer Global
+            setInterval(function() {
+                var timers = document.querySelectorAll('.promo-timer[data-time]');
+                var now = new Date().getTime();
+                timers.forEach(function(timer) {
+                    var timeStr = timer.getAttribute('data-time');
+                    if (!timeStr) return;
+                    var target = new Date(timeStr).getTime();
+                    var distance = target - now;
+                    var span = timer.querySelector('span');
+                    if (distance < 0) {
+                        span.innerText = "Promo Berakhir";
+                    } else {
+                        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        span.innerText = (days > 0 ? days + " Hari " : "") + 
+                                         hours.toString().padStart(2, '0') + ":" + 
+                                         minutes.toString().padStart(2, '0') + ":" + 
+                                         seconds.toString().padStart(2, '0');
+                    }
+                });
+            }, 1000);
 
             // ================= LOGIN LOGIC =================
             window.handleLogin = function (e) {
@@ -1148,6 +1400,7 @@
                 if (!modalProdukObj) modalProdukObj = new bootstrap.Modal(document.getElementById('modalProduk'));
                 document.getElementById('formProduk').reset();
                 document.getElementById('prodId').value = '';
+                document.getElementById('prodBatasPromo').value = '';
                 document.getElementById('prodGambarFile').value = '';
                 document.getElementById('prodGambarUrls').value = '';
                 document.getElementById('uploadPreview').innerHTML = '';
@@ -1168,6 +1421,7 @@
                         document.getElementById('prodKategori').value = p.kategori;
                         document.getElementById('prodHarga').value = p.harga;
                         document.getElementById('prodHargaCoret').value = p.hargaCoret || '';
+                        document.getElementById('prodBatasPromo').value = p.batasPromo || '';
                         document.getElementById('prodGambarUrls').value = p.gambar || '';
                         var preview = document.getElementById('uploadPreview');
                         if (p.gambar) {
@@ -1280,6 +1534,7 @@
                     kategori: document.getElementById('prodKategori').value,
                     harga: parseInt(document.getElementById('prodHarga').value) || 0,
                     hargaCoret: parseInt(document.getElementById('prodHargaCoret').value) || 0,
+                    batasPromo: document.getElementById('prodBatasPromo').value,
                     gambar: uploadedUrls.join(','),
                     deskripsi: document.getElementById('prodDeskripsi').value,
                     link: document.getElementById('prodLink').value
@@ -1325,6 +1580,146 @@
                         mockProducts = mockProducts.filter(function (x) { return x.id !== id; });
                         renderProdukTable();
                         Swal.fire('Terhapus!', 'Produk telah dihapus.', 'success');
+                    }
+                });
+            };
+
+            // ================= TESTIMONI LOGIC (ADMIN) =================
+            var modalTestimoniObj;
+
+            window.openTestimoniModal = function(id) {
+                if (!modalTestimoniObj) modalTestimoniObj = new bootstrap.Modal(document.getElementById('modalTestimoni'));
+                document.getElementById('formTestimoni').reset();
+                document.getElementById('testiId').value = '';
+                document.getElementById('testiAvatarFile').value = '';
+                document.getElementById('testiAvatarUrl').value = '';
+                document.getElementById('modalTestimoniTitle').innerText = 'Tambah Testimoni';
+
+                if (id) {
+                    var t = mockTestimonials.find(function(x) { return x.id === id; });
+                    if (t) {
+                        document.getElementById('testiId').value = t.id;
+                        document.getElementById('testiNama').value = t.nama;
+                        document.getElementById('testiPeran').value = t.peran;
+                        document.getElementById('testiTeks').value = t.teks;
+                        document.getElementById('testiAvatarUrl').value = t.avatar || '';
+                        document.getElementById('modalTestimoniTitle').innerText = 'Edit Testimoni';
+                    }
+                }
+                modalTestimoniObj.show();
+            };
+
+            window.renderTestimoniTable = function() {
+                var tbody = document.getElementById('testimoniTableBody');
+                var html = '';
+                if (mockTestimonials.length === 0) {
+                    html = '<tr><td colspan="4" class="text-center text-muted">Belum ada testimoni.</td></tr>';
+                } else {
+                    mockTestimonials.forEach(function (t) {
+                        var avatar = t.avatar ? escapeHTML(t.avatar) : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(t.nama) + '&background=random';
+                        var img = '<img src="' + avatar + '" width="40" height="40" style="object-fit:cover; border-radius:50%; border:2px solid var(--border-color);">';
+                        html += '<tr>';
+                        html += '<td>' + img + '</td>';
+                        html += '<td><strong>' + escapeHTML(t.nama) + '</strong><br><small class="text-muted">' + escapeHTML(t.peran) + '</small></td>';
+                        html += '<td><small class="text-truncate d-inline-block" style="max-width:200px;">' + escapeHTML(t.teks) + '</small></td>';
+                        html += '<td class="text-end">';
+                        html += '<button class="btn btn-sm btn-outline-primary me-1" onclick="openTestimoniModal(\'' + t.id + '\')"><i class="fas fa-edit"></i></button>';
+                        html += '<button class="btn btn-sm btn-outline-danger" onclick="deleteTestimoni(\'' + t.id + '\')"><i class="fas fa-trash"></i></button>';
+                        html += '</td>';
+                        html += '</tr>';
+                    });
+                }
+                if (tbody) tbody.innerHTML = html;
+            };
+
+            window.saveTestimoni = async function(e) {
+                e.preventDefault();
+                var id = document.getElementById('testiId').value;
+                var btn = document.getElementById('btnSaveTestimoni');
+                var fileInput = document.getElementById('testiAvatarFile');
+                
+                btn.disabled = true;
+                btn.innerText = 'Menyimpan...';
+
+                var avatarUrl = document.getElementById('testiAvatarUrl').value;
+                if (fileInput.files.length > 0) {
+                    var file = fileInput.files[0];
+                    try {
+                        var base64 = await readFileAsBase64(file);
+                        var res = await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                action: 'uploadImage',
+                                payload: {
+                                    base64: base64.split(',')[1],
+                                    mimetype: file.type,
+                                    filename: file.name
+                                }
+                            }),
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                        }).then(function(r) { return r.json(); });
+
+                        if (res.status === 'success') {
+                            avatarUrl = res.url;
+                        }
+                    } catch (err) {
+                        console.error('Upload failed', err);
+                    }
+                }
+
+                var payload = {
+                    id: id,
+                    nama: document.getElementById('testiNama').value,
+                    peran: document.getElementById('testiPeran').value,
+                    teks: document.getElementById('testiTeks').value,
+                    avatar: avatarUrl
+                };
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'saveTestimoni', payload: payload }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(res) {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan';
+                    modalTestimoniObj.hide();
+                    
+                    if(res.status === 'success') {
+                        Swal.fire('Sukses', 'Data testimoni berhasil disimpan', 'success');
+                        loadDataFromDatabase();
+                    } else {
+                        Swal.fire('Error', res.message, 'error');
+                    }
+                })
+                .catch(function(err) {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan';
+                    Swal.fire('Error', 'Gagal menghubungi server.', 'error');
+                });
+            };
+
+            window.deleteTestimoni = function(id) {
+                Swal.fire({
+                    title: 'Hapus Testimoni?',
+                    text: 'Data tidak dapat dikembalikan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        mockTestimonials = mockTestimonials.filter(function (x) { return x.id !== id; });
+                        renderTestimoniTable();
+                        
+                        fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'deleteTestimoni', payload: { id: id } }),
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                        });
+                        
+                        Swal.fire('Terhapus!', 'Testimoni telah dihapus.', 'success');
                     }
                 });
             };
