@@ -432,18 +432,46 @@
             color: #4f46e5;
         }
 
+        .testimonial-slider-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 20px 0;
+            white-space: nowrap;
+        }
+
+        .testimonial-track {
+            display: inline-block;
+            animation: scroll-testimonials 30s linear infinite;
+        }
+
+        .testimonial-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll-testimonials {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         .testimonial-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 30px;
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
+            width: 400px;
+            margin: 0 15px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.05);
             text-align: left;
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
+            white-space: normal;
+            vertical-align: top;
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
         }
 
         .quote-icon {
@@ -539,18 +567,12 @@
         </div>
 
         <!-- Testimonial Section -->
-        <div class="container mt-5 pt-5 pb-5 border-top d-none" id="publicTestimonialSection">
+        <div class="container-fluid mt-5 pt-5 pb-5 border-top d-none" id="publicTestimonialSection" style="overflow:hidden;">
             <h2 class="text-center fw-bold mb-5">Apa Kata Mereka?</h2>
-            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner" id="testimonialContainer">
+            <div class="testimonial-slider-container">
+                <div class="testimonial-track" id="testimonialContainer">
                     <!-- Rendered by JS -->
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev" style="width: 5%; justify-content: flex-start;">
-                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: var(--card-bg); border-radius: 50%; padding: 20px;"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next" style="width: 5%; justify-content: flex-end;">
-                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: var(--card-bg); border-radius: 50%; padding: 20px;"></span>
-                </button>
             </div>
         </div>
 
@@ -1132,12 +1154,10 @@
                     return;
                 }
                 section.classList.remove('d-none');
-                var html = '';
-                mockTestimonials.forEach(function(t, idx) {
-                    var active = idx === 0 ? 'active' : '';
+                var cardsHtml = '';
+                mockTestimonials.forEach(function(t) {
                     var avatar = t.avatar ? escapeHTML(t.avatar) : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(t.nama) + '&background=random';
-                    html += `
-                    <div class="carousel-item ${active} py-4">
+                    cardsHtml += `
                         <div class="testimonial-card">
                             <i class="fas fa-quote-left quote-icon"></i>
                             <p class="testimonial-text">"${escapeHTML(t.teks)}"</p>
@@ -1148,10 +1168,9 @@
                                     <small class="text-muted" style="font-size: 0.85rem;">${escapeHTML(t.peran)}</small>
                                 </div>
                             </div>
-                        </div>
-                    </div>`;
+                        </div>`;
                 });
-                container.innerHTML = html;
+                container.innerHTML = cardsHtml + cardsHtml;
             }
 
             // ================= PUBLIC LANDING PAGE LOGIC =================
