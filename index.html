@@ -590,6 +590,45 @@
         </main>
     </section>
 
+    <!-- Modal Detail Produk Public -->
+    <div class="modal fade" id="modalPublicDetail" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                <div class="modal-header border-0 bg-light">
+                    <h5 class="modal-title fw-bold" id="detailKategori" style="color: #4f46e5; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Kategori</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="detailCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner" id="detailCarouselInner">
+                            <!-- Rendered by JS -->
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#detailCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 20px;"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#detailCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 20px;"></span>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="fw-bold mb-2" id="detailNama">Nama Produk</h3>
+                        <div class="mb-3">
+                            <span id="detailHargaCoret" class="text-muted text-decoration-line-through me-2" style="font-size: 1.1rem;"></span>
+                            <span id="detailHarga" class="fw-bold text-danger" style="font-size: 1.5rem;"></span>
+                        </div>
+                        <div class="bg-light p-3 rounded mb-4">
+                            <h6 class="fw-bold mb-2">Deskripsi Produk</h6>
+                            <p id="detailDeskripsi" class="text-muted mb-0" style="white-space: pre-line; line-height: 1.6;"></p>
+                        </div>
+                        <button id="btnDetailBeli" class="btn-buy w-100 py-3" style="font-size: 1.1rem;">
+                            <i class="fas fa-shopping-cart me-2"></i> Dapatkan Sekarang
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Kategori -->
     <div class="modal fade" id="modalKategori" tabindex="-1">
         <div class="modal-dialog">
@@ -645,9 +684,12 @@
                                 <label class="form-label">Harga Asli/Coret (Opsional)</label>
                                 <input type="number" class="form-control" id="prodHargaCoret">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">URL Gambar/Icon (Opsional)</label>
-                                <input type="text" class="form-control" id="prodGambar" placeholder="https://...">
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Upload Gambar Produk (Maks. 5 Foto)</label>
+                                <input type="file" class="form-control" id="prodGambarFile" accept="image/*" multiple onchange="previewImages()">
+                                <input type="hidden" id="prodGambarUrls">
+                                <div id="uploadPreview" class="d-flex gap-2 mt-2 flex-wrap"></div>
+                                <small class="text-muted">Foto pertama akan menjadi cover utama.</small>
                             </div>
                             <div class="col-12 mb-3">
                                 <label class="form-label">Deskripsi Singkat</label>
@@ -886,7 +928,11 @@
                 }
 
                 filtered.forEach(function (p) {
-                    var imgHtml = p.gambar ? '<img src="' + escapeHTML(p.gambar) + '" class="product-img" alt="Product">' : '<div class="product-img"><i class="fas fa-image"></i></div>';
+                    var coverImg = '';
+                    if (p.gambar) {
+                        coverImg = p.gambar.split(',')[0];
+                    }
+                    var imgHtml = coverImg ? '<img src="' + escapeHTML(coverImg) + '" class="product-img" alt="Product">' : '<div class="product-img"><i class="fas fa-image"></i></div>';
                     var badgeHtml = p.badge ? '<div class="badge-bestseller">' + escapeHTML(p.badge) + '</div>' : '';
 
                     html += `
@@ -899,14 +945,17 @@
                 <div class="product-body">
                   <div class="product-category">${escapeHTML(p.kategori)}</div>
                   <h5 class="product-title">${escapeHTML(p.nama)}</h5>
-                  <p class="product-desc">${escapeHTML(p.deskripsi)}</p>
+                  <p class="product-desc text-truncate" style="max-height: 3em; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; white-space: normal;">${escapeHTML(p.deskripsi)}</p>
                   <div class="product-price">
                     ${p.hargaCoret > 0 ? '<del style="color: #94a3b8; font-size: 0.95rem; font-weight: 500; margin-right: 8px;">' + formatRupiah(p.hargaCoret) + '</del>' : '<small>Harga Promo</small>'}
                     ${formatRupiah(p.harga)}
                   </div>
-                  <button class="btn-buy w-100 mt-auto" onclick="buyProduct('${escapeHTML(p.nama)}', '${escapeHTML(p.link)}')">
-                    <i class="fas fa-shopping-cart me-2"></i> Beli Sekarang
-                  </button>
+                  <div class="d-flex gap-2 mt-auto">
+                      <button class="btn btn-outline-primary flex-grow-1" onclick="openPublicDetail('${p.id}')">Detail Produk</button>
+                      <button class="btn-buy flex-grow-1" style="margin: 0; padding: 10px;" onclick="buyProduct('${escapeHTML(p.nama)}', '${escapeHTML(p.link)}')">
+                        <i class="fas fa-shopping-cart"></i> Beli
+                      </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -916,18 +965,54 @@
             }
 
             window.buyProduct = function (nama, link) {
-                Swal.fire({
-                    title: 'Beli Produk',
-                    text: 'Anda akan diarahkan untuk membeli: ' + nama,
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonText: 'Lanjutkan',
-                    cancelButtonText: 'Batal'
-                }).then(function (result) {
-                    if (result.isConfirmed) {
-                        window.open(link, '_blank');
-                    }
-                });
+                window.open(link, '_blank');
+            };
+
+            var modalPublicDetailObj;
+            window.openPublicDetail = function(id) {
+                if (!modalPublicDetailObj) modalPublicDetailObj = new bootstrap.Modal(document.getElementById('modalPublicDetail'));
+                var p = mockProducts.find(x => x.id === id);
+                if (!p) return;
+                
+                document.getElementById('detailKategori').innerText = p.kategori;
+                document.getElementById('detailNama').innerText = p.nama;
+                document.getElementById('detailDeskripsi').innerText = p.deskripsi;
+                
+                if(p.hargaCoret > 0) {
+                    document.getElementById('detailHargaCoret').innerText = formatRupiah(p.hargaCoret);
+                } else {
+                    document.getElementById('detailHargaCoret').innerText = '';
+                }
+                document.getElementById('detailHarga').innerText = formatRupiah(p.harga);
+                
+                var btnBeli = document.getElementById('btnDetailBeli');
+                btnBeli.onclick = function() {
+                    buyProduct(p.nama, p.link);
+                };
+                
+                var carouselInner = document.getElementById('detailCarouselInner');
+                carouselInner.innerHTML = '';
+                if (p.gambar) {
+                    var urls = p.gambar.split(',');
+                    urls.forEach(function(url, idx) {
+                        var activeClass = idx === 0 ? 'active' : '';
+                        carouselInner.innerHTML += `
+                            <div class="carousel-item ${activeClass}">
+                                <img src="${escapeHTML(url)}" class="d-block w-100" style="aspect-ratio: 16/9; object-fit: contain; background: #f8fafc;" alt="Slide ${idx+1}">
+                            </div>
+                        `;
+                    });
+                } else {
+                    carouselInner.innerHTML = `
+                        <div class="carousel-item active">
+                            <div class="d-flex align-items-center justify-content-center bg-light" style="aspect-ratio: 16/9;">
+                                <i class="fas fa-image fa-4x text-muted"></i>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                modalPublicDetailObj.show();
             };
 
             // ================= LOGIN LOGIC =================
@@ -1063,6 +1148,9 @@
                 if (!modalProdukObj) modalProdukObj = new bootstrap.Modal(document.getElementById('modalProduk'));
                 document.getElementById('formProduk').reset();
                 document.getElementById('prodId').value = '';
+                document.getElementById('prodGambarFile').value = '';
+                document.getElementById('prodGambarUrls').value = '';
+                document.getElementById('uploadPreview').innerHTML = '';
                 document.getElementById('modalProdukTitle').innerText = 'Tambah Produk';
 
                 // Populate Select
@@ -1080,7 +1168,13 @@
                         document.getElementById('prodKategori').value = p.kategori;
                         document.getElementById('prodHarga').value = p.harga;
                         document.getElementById('prodHargaCoret').value = p.hargaCoret || '';
-                        document.getElementById('prodGambar').value = p.gambar;
+                        document.getElementById('prodGambarUrls').value = p.gambar || '';
+                        var preview = document.getElementById('uploadPreview');
+                        if (p.gambar) {
+                            p.gambar.split(',').forEach(function(url) {
+                                preview.innerHTML += '<img src="' + escapeHTML(url) + '" style="width:60px;height:60px;object-fit:cover;border-radius:5px;border:1px solid #ccc;">';
+                            });
+                        }
                         document.getElementById('prodDeskripsi').value = p.deskripsi;
                         document.getElementById('prodLink').value = p.link;
                         document.getElementById('modalProdukTitle').innerText = 'Edit Produk';
@@ -1113,10 +1207,72 @@
                 tbody.innerHTML = html;
             }
 
-            window.saveProduk = function (e) {
+            window.previewImages = function() {
+                var fileInput = document.getElementById('prodGambarFile');
+                var preview = document.getElementById('uploadPreview');
+                preview.innerHTML = '';
+                var existingUrls = document.getElementById('prodGambarUrls').value;
+                if(existingUrls) {
+                     existingUrls.split(',').forEach(function(url) {
+                         preview.innerHTML += '<img src="' + url + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; opacity: 0.5;" title="Foto Lama">';
+                     });
+                }
+                for (var i = 0; i < fileInput.files.length; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.innerHTML += '<img src="' + e.target.result + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; border: 2px solid #4f46e5;">';
+                    };
+                    reader.readAsDataURL(fileInput.files[i]);
+                }
+            };
+            
+            function readFileAsBase64(file) {
+                return new Promise(function(resolve, reject) {
+                    const reader = new FileReader();
+                    reader.onload = function() { resolve(reader.result); };
+                    reader.onerror = function(error) { reject(error); };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            window.saveProduk = async function (e) {
                 e.preventDefault();
                 var id = document.getElementById('prodId').value;
                 var btn = document.getElementById('btnSaveProduk');
+                var fileInput = document.getElementById('prodGambarFile');
+                
+                btn.disabled = true;
+                btn.innerText = 'Mengupload Gambar...';
+                
+                var existingUrls = document.getElementById('prodGambarUrls').value;
+                var uploadedUrls = existingUrls ? existingUrls.split(',') : [];
+
+                if (fileInput.files.length > 0) {
+                    for (var i = 0; i < fileInput.files.length; i++) {
+                        var file = fileInput.files[i];
+                        try {
+                            var base64 = await readFileAsBase64(file);
+                            var res = await fetch(SCRIPT_URL, {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    action: 'uploadImage',
+                                    payload: {
+                                        base64: base64.split(',')[1],
+                                        mimetype: file.type,
+                                        filename: file.name
+                                    }
+                                }),
+                                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                            }).then(function(r) { return r.json(); });
+
+                            if (res.status === 'success') {
+                                uploadedUrls.push(res.url);
+                            }
+                        } catch (err) {
+                            console.error('Upload failed', err);
+                        }
+                    }
+                }
 
                 var payload = {
                     id: id,
@@ -1124,12 +1280,11 @@
                     kategori: document.getElementById('prodKategori').value,
                     harga: parseInt(document.getElementById('prodHarga').value) || 0,
                     hargaCoret: parseInt(document.getElementById('prodHargaCoret').value) || 0,
-                    gambar: document.getElementById('prodGambar').value,
+                    gambar: uploadedUrls.join(','),
                     deskripsi: document.getElementById('prodDeskripsi').value,
                     link: document.getElementById('prodLink').value
                 };
 
-                btn.disabled = true;
                 btn.innerText = 'Menyimpan...';
 
                 fetch(SCRIPT_URL, {
@@ -1137,24 +1292,23 @@
                     body: JSON.stringify({ action: 'saveProduk', payload: payload }),
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                 })
-                .then(res => res.json())
-                .then(res => {
+                .then(function(res) { return res.json(); })
+                .then(function(res) {
                     btn.disabled = false;
                     btn.innerText = 'Simpan';
                     modalProdukObj.hide();
                     
                     if(res.status === 'success') {
                         Swal.fire('Sukses', 'Data produk berhasil disimpan', 'success');
-                        loadDataFromDatabase(); // reload data
+                        loadDataFromDatabase();
                     } else {
                         Swal.fire('Error', res.message, 'error');
                     }
                 })
-                .catch(err => {
+                .catch(function(err) {
                     btn.disabled = false;
                     btn.innerText = 'Simpan';
                     Swal.fire('Error', 'Gagal menghubungi server.', 'error');
-                    console.error(err);
                 });
             };
 
