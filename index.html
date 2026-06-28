@@ -52,7 +52,7 @@
             background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%);
             position: relative;
             color: white;
-            padding: 100px 0 80px;
+            padding: 50px 0 40px;
             text-align: center;
             overflow: hidden;
         }
@@ -385,9 +385,6 @@
 
 <body>
 
-    <!-- PREVIEW BADGE -->
-    <div class="preview-badge"><i class="fas fa-exclamation-triangle"></i> MODE PREVIEW</div>
-
     <!-- LOADER -->
     <div id="fullPageLoader" class="d-none">
         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
@@ -658,38 +655,43 @@
         (function () {
             'use strict';
 
-            // ================= STATE & MOCK DATA (PREVIEW) =================
+            // ================= STATE & MOCK DATA =================
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwspMxe6cCGjy5t4isufXfOGH_GYqXWhw-BQTqDHP2AeJq3yabsXE6oRAa3iJi6H2V8/exec';
+            
             var activePage = 'dashboard';
             var activePublicCategory = 'Semua';
             var searchQuery = '';
 
-            var mockCategories = [
-                { id: 'K1', nama: 'E-Book' },
-                { id: 'K2', nama: 'Template UI' },
-                { id: 'K3', nama: 'Source Code' },
-                { id: 'K4', nama: 'Tools' },
-                { id: 'K5', nama: 'Grafis & Desain' },
-                { id: 'K6', nama: 'Video Course' },
-                { id: 'K7', nama: 'Prompt AI' },
-                { id: 'K8', nama: 'Audio & Music' },
-                { id: 'K9', nama: 'Plugin' },
-                { id: 'K10', nama: 'Font' }
-            ];
+            var mockCategories = [];
+            var mockProducts = [];
 
-            var mockProducts = [
-                { id: 'P1', nama: 'Mastering Apps Script', kategori: 'E-Book', harga: 99000, gambar: '', deskripsi: 'Panduan lengkap membuat web app dengan Google Apps Script dari nol hingga mahir.', link: 'https://wa.me/628123456789', badge: 'Terlaris' },
-                { id: 'P2', nama: 'Dashboard Admin Pro', kategori: 'Template UI', harga: 149000, gambar: '', deskripsi: 'Template dashboard HTML/CSS/JS siap pakai yang responsif dan modern.', link: 'https://wa.me/628123456789', badge: '' },
-                { id: 'P3', nama: 'Sistem Kasir WebApp', kategori: 'Source Code', harga: 299000, gambar: '', deskripsi: 'Source code aplikasi kasir berbasis web, langsung deploy ke hosting Anda.', link: 'https://wa.me/628123456789', badge: 'Populer' },
-                { id: 'P4', nama: '100+ Prompt AI ChatGPT', kategori: 'Prompt AI', harga: 49000, gambar: '', deskripsi: 'Koleksi prompt ChatGPT untuk mempercepat kerja developer dan copywriter.', link: 'https://wa.me/628123456789', badge: 'Baru' },
-                { id: 'P5', nama: 'WhatsApp Bot Script', kategori: 'Source Code', harga: 199000, gambar: '', deskripsi: 'Skrip Node.js untuk membuat bot WhatsApp otomatis dengan integrasi AI.', link: 'https://wa.me/628123456789', badge: '' },
-                { id: 'P6', nama: 'Bundle Elementor Pro Kit', kategori: 'Template UI', harga: 89000, gambar: '', deskripsi: 'Kumpulan 50+ template Elementor siap import untuk berbagai jenis website.', link: 'https://wa.me/628123456789', badge: 'Diskon 50%' },
-                { id: 'P7', nama: 'Premium UI Icons Pack', kategori: 'Grafis & Desain', harga: 69000, gambar: '', deskripsi: '1000+ ikon vektor premium dalam format SVG, Figma, dan PNG.', link: 'https://wa.me/628123456789', badge: '' },
-                { id: 'P8', nama: 'Kursus Fullstack MERN', kategori: 'Video Course', harga: 350000, gambar: '', deskripsi: 'Video tutorial lengkap membangun aplikasi e-commerce dari nol.', link: 'https://wa.me/628123456789', badge: 'Hot' },
-                { id: 'P9', nama: 'Font Signature Exclusive', kategori: 'Font', harga: 55000, gambar: '', deskripsi: 'Font signature elegan cocok untuk logo, undangan, dan branding mewah.', link: 'https://wa.me/628123456789', badge: '' },
-                { id: 'P10', nama: 'WP Auto-Post Plugin', kategori: 'Plugin', harga: 125000, gambar: '', deskripsi: 'Plugin WordPress untuk memposting konten secara otomatis terjadwal.', link: 'https://wa.me/628123456789', badge: 'Baru' },
-                { id: 'P11', nama: 'Cinematic LUTS Pack', kategori: 'Grafis & Desain', harga: 75000, gambar: '', deskripsi: 'Preset warna premium untuk grading video Premiere Pro dan DaVinci Resolve.', link: 'https://wa.me/628123456789', badge: '' },
-                { id: 'P12', nama: 'Lo-Fi Background Beats', kategori: 'Audio & Music', harga: 45000, gambar: '', deskripsi: '10 Track musik Lo-Fi bebas hak cipta untuk latar belakang video YouTube.', link: 'https://wa.me/628123456789', badge: '' }
-            ];
+            function loadDataFromDatabase() {
+                showFullPageLoading(true);
+                fetch(SCRIPT_URL)
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            mockCategories = res.data.categories || [];
+                            mockProducts = res.data.products || [];
+                            
+                            renderPublicCategories();
+                            renderPublicProducts();
+                            if(activePage === 'dashboard') loadPageData('dashboard');
+                            if(activePage === 'kategori') renderKategoriTable();
+                            if(activePage === 'produk') renderProdukTable();
+                        } else {
+                            console.error('Error fetching data:', res.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Network error:', err);
+                        renderPublicCategories();
+                        renderPublicProducts();
+                    })
+                    .finally(() => {
+                        showFullPageLoading(false);
+                    });
+            }
 
             // ================= AUTH MODULE =================
             var Auth = (function () {
@@ -729,10 +731,15 @@
 
             // ================= APP INITIALIZATION =================
             window.addEventListener('DOMContentLoaded', function () {
-                // By default, check state
                 checkLoginState();
-                renderPublicCategories();
-                renderPublicProducts();
+                
+                if (SCRIPT_URL && SCRIPT_URL !== 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI') {
+                    loadDataFromDatabase();
+                } else {
+                    renderPublicCategories();
+                    renderPublicProducts();
+                    console.log('SCRIPT_URL belum dikonfigurasi. Data masih kosong.');
+                }
             });
 
             // ================= NAVIGATION =================
@@ -982,20 +989,32 @@
                 btn.disabled = true;
                 btn.innerText = 'Menyimpan...';
 
-                setTimeout(function () {
-                    if (id) {
-                        var idx = mockCategories.findIndex(function (x) { return x.id === id; });
-                        if (idx > -1) mockCategories[idx].nama = nama;
-                    } else {
-                        mockCategories.push({ id: generateId(), nama: nama });
-                    }
+                var payload = { id: id, nama: nama };
 
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'saveKategori', payload: payload }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                })
+                .then(res => res.json())
+                .then(res => {
                     btn.disabled = false;
                     btn.innerText = 'Simpan';
                     modalKategoriObj.hide();
-                    Swal.fire('Sukses', 'Data kategori berhasil disimpan', 'success');
-                    renderKategoriTable();
-                }, 500);
+                    
+                    if(res.status === 'success') {
+                        Swal.fire('Sukses', 'Data kategori berhasil disimpan', 'success');
+                        loadDataFromDatabase(); // reload from DB
+                    } else {
+                        Swal.fire('Error', res.message, 'error');
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan';
+                    Swal.fire('Error', 'Gagal menghubungi server.', 'error');
+                    console.error(err);
+                });
             };
 
             window.deleteKategori = function (id) {
@@ -1076,6 +1095,7 @@
                 var btn = document.getElementById('btnSaveProduk');
 
                 var payload = {
+                    id: id,
                     nama: document.getElementById('prodNama').value,
                     kategori: document.getElementById('prodKategori').value,
                     harga: parseInt(document.getElementById('prodHarga').value) || 0,
@@ -1087,24 +1107,30 @@
                 btn.disabled = true;
                 btn.innerText = 'Menyimpan...';
 
-                setTimeout(function () {
-                    if (id) {
-                        var idx = mockProducts.findIndex(function (x) { return x.id === id; });
-                        if (idx > -1) {
-                            payload.id = id;
-                            mockProducts[idx] = payload;
-                        }
-                    } else {
-                        payload.id = generateId();
-                        mockProducts.push(payload);
-                    }
-
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'saveProduk', payload: payload }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                })
+                .then(res => res.json())
+                .then(res => {
                     btn.disabled = false;
                     btn.innerText = 'Simpan';
                     modalProdukObj.hide();
-                    Swal.fire('Sukses', 'Data produk berhasil disimpan', 'success');
-                    renderProdukTable();
-                }, 500);
+                    
+                    if(res.status === 'success') {
+                        Swal.fire('Sukses', 'Data produk berhasil disimpan', 'success');
+                        loadDataFromDatabase(); // reload data
+                    } else {
+                        Swal.fire('Error', res.message, 'error');
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan';
+                    Swal.fire('Error', 'Gagal menghubungi server.', 'error');
+                    console.error(err);
+                });
             };
 
             window.deleteProduk = function (id) {
