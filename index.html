@@ -634,8 +634,12 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Harga (Rp)</label>
+                                <label class="form-label">Harga Promo (Rp)</label>
                                 <input type="number" class="form-control" id="prodHarga" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Harga Asli/Coret (Opsional)</label>
+                                <input type="number" class="form-control" id="prodHargaCoret">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">URL Gambar/Icon (Opsional)</label>
@@ -893,7 +897,7 @@
                   <h5 class="product-title">${escapeHTML(p.nama)}</h5>
                   <p class="product-desc">${escapeHTML(p.deskripsi)}</p>
                   <div class="product-price">
-                    <small>Harga Promo</small>
+                    ${p.hargaCoret > 0 ? '<del style="color: #94a3b8; font-size: 0.95rem; font-weight: 500; margin-right: 8px;">' + formatRupiah(p.hargaCoret) + '</del>' : '<small>Harga Promo</small>'}
                     ${formatRupiah(p.harga)}
                   </div>
                   <button class="btn-buy w-100 mt-auto" onclick="buyProduct('${escapeHTML(p.nama)}', '${escapeHTML(p.link)}')">
@@ -1071,6 +1075,7 @@
                         document.getElementById('prodNama').value = p.nama;
                         document.getElementById('prodKategori').value = p.kategori;
                         document.getElementById('prodHarga').value = p.harga;
+                        document.getElementById('prodHargaCoret').value = p.hargaCoret || '';
                         document.getElementById('prodGambar').value = p.gambar;
                         document.getElementById('prodDeskripsi').value = p.deskripsi;
                         document.getElementById('prodLink').value = p.link;
@@ -1092,7 +1097,8 @@
                         html += '<td>' + img + '</td>';
                         html += '<td><strong>' + escapeHTML(p.nama) + '</strong><br><small class="text-muted text-truncate d-inline-block" style="max-width:200px;">' + escapeHTML(p.deskripsi) + '</small></td>';
                         html += '<td><span class="badge bg-secondary">' + escapeHTML(p.kategori) + '</span></td>';
-                        html += '<td>' + formatRupiah(p.harga) + '</td>';
+                        var hargaHtml = p.hargaCoret > 0 ? '<del class="text-muted" style="font-size:0.85rem;">' + formatRupiah(p.hargaCoret) + '</del><br>' + formatRupiah(p.harga) : formatRupiah(p.harga);
+                        html += '<td>' + hargaHtml + '</td>';
                         html += '<td class="text-end">';
                         html += '<button class="btn btn-sm btn-outline-primary me-1" onclick="openProdukModal(\'' + p.id + '\')"><i class="fas fa-edit"></i></button>';
                         html += '<button class="btn btn-sm btn-outline-danger" onclick="deleteProduk(\'' + p.id + '\')"><i class="fas fa-trash"></i></button>';
@@ -1113,6 +1119,7 @@
                     nama: document.getElementById('prodNama').value,
                     kategori: document.getElementById('prodKategori').value,
                     harga: parseInt(document.getElementById('prodHarga').value) || 0,
+                    hargaCoret: parseInt(document.getElementById('prodHargaCoret').value) || 0,
                     gambar: document.getElementById('prodGambar').value,
                     deskripsi: document.getElementById('prodDeskripsi').value,
                     link: document.getElementById('prodLink').value
