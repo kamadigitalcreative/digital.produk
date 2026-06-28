@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiStore - Produk Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Global */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        .preview-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 9999;
+            background: #ffc107;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #fullPageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Landing Page */
+        .hero {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            justify-content: center;
+        }
+
+        .category-btn {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 30px;
+            padding: 8px 20px;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: #4f46e5;
+            color: #fff;
+            border-color: #4f46e5;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #adb5bd;
+        }
+
+        .product-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-category {
+            font-size: 12px;
+            color: #4f46e5;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #212529;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            background: #212529;
+            color: #fff;
+            padding: 40px 0 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .footer-link {
+            color: #adb5bd;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+        }
+
+        /* Admin Auth & Shell */
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f4f6f9;
+        }
+
+        .auth-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .app-shell {
+            min-height: 100vh;
+            display: flex;
+            background-color: #f4f6f9;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #212529;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item-custom {
+            color: rgba(255, 255, 255, 0.7);
+            padding: 12px 20px;
+            display: block;
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item-custom:hover,
+        .nav-item-custom.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #4f46e5;
+        }
+
+        .nav-item-custom i {
+            width: 25px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: auto;
+        }
+
+        .topbar {
+            background: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .app-page {
+            padding: 30px;
+        }
+
+        .card-dashboard {
+            background: #fff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .card-dashboard h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #4f46e5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PREVIEW BADGE -->
+    <div class="preview-badge"><i class="fas fa-exclamation-triangle"></i> MODE PREVIEW</div>
+
+    <!-- LOADER -->
+    <div id="fullPageLoader" class="d-none">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+        <div class="mt-3 font-weight-bold">Memuat...</div>
+    </div>
+
+    <!-- ================= LANDING PAGE ================= -->
+    <section id="landingPage">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="container">
+                <h1>Jelajahi Produk Digital Terbaik</h1>
+                <p class="lead mb-4">Tingkatkan produktivitasmu dengan template, e-book, dan source code pilihan.</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container mt-5">
+            <!-- Categories -->
+            <div class="category-filter mb-5" id="publicCategoryContainer">
+                <!-- Rendered by JS -->
+            </div>
+
+            <!-- Products Grid -->
+            <div class="row g-4" id="publicProductGrid">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="container">
+                <h4 class="mb-3">DigiStore</h4>
+                <p class="mb-4 text-muted">Koleksi produk digital berkualitas untuk kreator dan developer.</p>
+                <hr class="border-secondary">
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <small>&copy; 2026 DigiStore. All rights reserved.</small>
+                    <a href="#" class="footer-link" onclick="event.preventDefault(); showAdminLogin();"><i
+                            class="fas fa-lock"></i> Admin Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= LOGIN PAGE ================= -->
+    <section id="loginPage" class="auth-page d-none">
+        <div class="auth-card">
+            <div class="text-center mb-4">
+                <h3 class="font-weight-bold text-primary"><i class="fas fa-store"></i> DigiStore Admin</h3>
+                <p class="text-muted">Login untuk mengelola produk</p>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" id="loginUsername" required autocomplete="username">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" required
+                        autocomplete="current-password">
+                    <div class="form-text">Hint: admin / bismillah</div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" id="btnLogin">Masuk</button>
+                <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none"
+                    onclick="goBackToLanding()">Kembali ke Toko</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ================= MAIN APP (ADMIN) ================= -->
+    <section id="mainApp" class="app-shell d-none">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-store text-primary"></i> DigiStore Admin
+            </div>
+            <div class="mt-3">
+                <a class="nav-item-custom active" onclick="showPage('dashboard', this)">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a class="nav-item-custom" onclick="showPage('kategori', this)">
+                    <i class="fas fa-tags"></i> Kategori Produk
+                </a>
+                <a class="nav-item-custom" onclick="showPage('produk', this)">
+                    <i class="fas fa-box"></i> Kelola Produk
+                </a>
+            </div>
+            <div class="mt-auto mb-3">
+                <a class="nav-item-custom text-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="goBackToLanding()"><i
+                            class="fas fa-external-link-alt"></i> Lihat Toko</button>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="me-2 text-muted">Halo, <span id="displayUser">Admin</span></span>
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                        style="width: 35px; height: 35px;">A</div>
+                </div>
+            </header>
+
+            <!-- Page: Dashboard -->
+            <div id="page-dashboard" class="app-page">
+                <h4 class="mb-4">Dashboard</h4>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card-dashboard">
+                            <h3 id="dashTotalProduk">0</h3>
+                            <div class="text-muted">Total Produk</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-dashboard">
+                            <h3 id="dashTotalKategori">0</h3>
+                            <div class="text-muted">Total Kategori</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page: Kategori -->
+            <div id="page-kategori" class="app-page d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4>Kategori Produk</h4>
+                    <button class="btn btn-primary" onclick="openKategoriModal()"><i class="fas fa-plus"></i> Tambah
+                        Kategori</button>
+                </div>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nama Kategori</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="kategoriTableBody">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page: Produk -->
+            <div id="page-produk" class="app-page d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4>Kelola Produk</h4>
+                    <button class="btn btn-primary" onclick="openProdukModal()"><i class="fas fa-plus"></i> Tambah
+                        Produk</button>
+                </div>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Gambar</th>
+                                        <th>Nama Produk</th>
+                                        <th>Kategori</th>
+                                        <th>Harga</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="produkTableBody">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </section>
+
+    <!-- Modal Kategori -->
+    <div class="modal fade" id="modalKategori" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formKategori" onsubmit="saveKategori(event)">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalKategoriTitle">Tambah Kategori</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="katId">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Kategori</label>
+                            <input type="text" class="form-control" id="katNama" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" id="btnSaveKategori">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Produk -->
+    <div class="modal fade" id="modalProduk" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="formProduk" onsubmit="saveProduk(event)">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalProdukTitle">Tambah Produk</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="prodId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Produk</label>
+                                <input type="text" class="form-control" id="prodNama" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select" id="prodKategori" required>
+                                    <!-- Rendered by JS -->
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Harga (Rp)</label>
+                                <input type="number" class="form-control" id="prodHarga" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">URL Gambar/Icon (Opsional)</label>
+                                <input type="text" class="form-control" id="prodGambar" placeholder="https://...">
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Deskripsi Singkat</label>
+                                <textarea class="form-control" id="prodDeskripsi" rows="3" required></textarea>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Link Pembelian / WhatsApp</label>
+                                <input type="url" class="form-control" id="prodLink" placeholder="https://wa.me/..."
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" id="btnSaveProduk">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            // ================= STATE & MOCK DATA (PREVIEW) =================
+            var activePage = 'dashboard';
+            var activePublicCategory = 'Semua';
+
+            var mockCategories = [
+                { id: 'K1', nama: 'E-Book' },
+                { id: 'K2', nama: 'Template UI' },
+                { id: 'K3', nama: 'Source Code' },
+                { id: 'K4', nama: 'Tools' }
+            ];
+
+            var mockProducts = [
+                { id: 'P1', nama: 'Mastering Apps Script', kategori: 'E-Book', harga: 99000, gambar: '', deskripsi: 'Panduan lengkap membuat web app dengan Google Apps Script dari nol hingga mahir.', link: 'https://wa.me/628123456789' },
+                { id: 'P2', nama: 'Dashboard Admin Pro', kategori: 'Template UI', harga: 149000, gambar: '', deskripsi: 'Template dashboard HTML/CSS/JS siap pakai yang responsif dan modern.', link: 'https://wa.me/628123456789' },
+                { id: 'P3', nama: 'Sistem Kasir WebApp', kategori: 'Source Code', harga: 299000, gambar: '', deskripsi: 'Source code aplikasi kasir berbasis web, langsung deploy ke hosting Anda.', link: 'https://wa.me/628123456789' },
+                { id: 'P4', nama: '100+ Prompt AI', kategori: 'E-Book', harga: 49000, gambar: '', deskripsi: 'Koleksi prompt ChatGPT untuk mempercepat kerja developer.', link: 'https://wa.me/628123456789' },
+                { id: 'P5', nama: 'WhatsApp Bot Script', kategori: 'Source Code', harga: 199000, gambar: '', deskripsi: 'Skrip Node.js untuk membuat bot WhatsApp otomatis.', link: 'https://wa.me/628123456789' }
+            ];
+
+            // ================= AUTH MODULE =================
+            var Auth = (function () {
+                var _verified = false, _token = null, _user = null;
+                return {
+                    login: function (token, user) { _token = token; _user = user; _verified = true; },
+                    isVerified: function () { return _verified === true && !!_token; },
+                    getToken: function () { return _token; },
+                    getUser: function () { return _user; },
+                    clear: function () { _verified = false; _token = null; _user = null; }
+                };
+            })();
+
+            // ================= HELPERS =================
+            function escapeHTML(str) {
+                if (!str) return '';
+                var div = document.createElement('div');
+                div.appendChild(document.createTextNode(String(str)));
+                return div.innerHTML;
+            }
+
+            function formatRupiah(angka) {
+                return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            function showFullPageLoading(show) {
+                var loader = document.getElementById('fullPageLoader');
+                if (loader) {
+                    if (show) loader.classList.remove('d-none');
+                    else loader.classList.add('d-none');
+                }
+            }
+
+            function generateId() {
+                return 'ID' + Math.floor(Math.random() * 1000000);
+            }
+
+            // ================= APP INITIALIZATION =================
+            window.addEventListener('DOMContentLoaded', function () {
+                // By default, check state
+                checkLoginState();
+                renderPublicCategories();
+                renderPublicProducts();
+            });
+
+            // ================= NAVIGATION =================
+            window.showAdminLogin = function () {
+                document.getElementById('landingPage').classList.add('d-none');
+                document.getElementById('mainApp').classList.add('d-none');
+                document.getElementById('loginPage').classList.remove('d-none');
+            };
+
+            window.goBackToLanding = function () {
+                document.getElementById('loginPage').classList.add('d-none');
+                document.getElementById('mainApp').classList.add('d-none');
+                document.getElementById('landingPage').classList.remove('d-none');
+                renderPublicCategories();
+                renderPublicProducts();
+            };
+
+            function checkLoginState() {
+                var landingPage = document.getElementById('landingPage');
+                var loginPage = document.getElementById('loginPage');
+                var mainApp = document.getElementById('mainApp');
+
+                // If coming here directly, show landing page unless verified
+                if (Auth.isVerified()) {
+                    landingPage.classList.add('d-none');
+                    loginPage.classList.add('d-none');
+                    mainApp.classList.remove('d-none');
+                    document.getElementById('displayUser').innerText = Auth.getUser().fullname;
+                    showPage('dashboard');
+                } else {
+                    // Default to landing page if not verified
+                    landingPage.classList.remove('d-none');
+                    loginPage.classList.add('d-none');
+                    mainApp.classList.add('d-none');
+                }
+            }
+
+            window.showPage = function (pageName, navEl) {
+                if (!Auth.isVerified()) { window.logout(); return; }
+
+                activePage = pageName;
+
+                document.querySelectorAll('.app-page').forEach(function (page) {
+                    page.classList.add('d-none');
+                });
+
+                var target = document.getElementById('page-' + pageName);
+                if (target) target.classList.remove('d-none');
+
+                document.querySelectorAll('.nav-item-custom').forEach(function (item) {
+                    item.classList.remove('active');
+                });
+                if (navEl) navEl.classList.add('active');
+                else {
+                    // Find the nav element corresponding to the page
+                    var navLinks = document.querySelectorAll('.nav-item-custom');
+                    for (var i = 0; i < navLinks.length; i++) {
+                        if (navLinks[i].getAttribute('onclick').indexOf(pageName) > -1) {
+                            navLinks[i].classList.add('active');
+                            break;
+                        }
+                    }
+                }
+
+                loadPageData(pageName);
+            };
+
+            function loadPageData(pageName) {
+                if (pageName === 'dashboard') {
+                    document.getElementById('dashTotalProduk').innerText = mockProducts.length;
+                    document.getElementById('dashTotalKategori').innerText = mockCategories.length;
+                } else if (pageName === 'kategori') {
+                    renderKategoriTable();
+                } else if (pageName === 'produk') {
+                    renderProdukTable();
+                }
+            }
+
+            // ================= PUBLIC LANDING PAGE LOGIC =================
+            window.filterPublicCategory = function (katName, el) {
+                activePublicCategory = katName;
+                document.querySelectorAll('.category-btn').forEach(function (btn) {
+                    btn.classList.remove('active');
+                });
+                if (el) el.classList.add('active');
+                renderPublicProducts();
+            };
+
+            function renderPublicCategories() {
+                var container = document.getElementById('publicCategoryContainer');
+                var html = '<button class="category-btn ' + (activePublicCategory === 'Semua' ? 'active' : '') + '" onclick="filterPublicCategory(\'Semua\', this)">Semua</button>';
+
+                mockCategories.forEach(function (kat) {
+                    var isActive = activePublicCategory === kat.nama ? 'active' : '';
+                    html += '<button class="category-btn ' + isActive + '" onclick="filterPublicCategory(\'' + escapeHTML(kat.nama) + '\', this)">' + escapeHTML(kat.nama) + '</button>';
+                });
+
+                container.innerHTML = html;
+            }
+
+            function renderPublicProducts() {
+                var container = document.getElementById('publicProductGrid');
+                var html = '';
+
+                var filtered = mockProducts.filter(function (p) {
+                    return activePublicCategory === 'Semua' || p.kategori === activePublicCategory;
+                });
+
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div class="col-12 text-center text-muted py-5">Belum ada produk di kategori ini.</div>';
+                    return;
+                }
+
+                filtered.forEach(function (p) {
+                    var imgHtml = p.gambar ? '<img src="' + escapeHTML(p.gambar) + '" class="product-img" alt="Product">' : '<div class="product-img"><i class="fas fa-image"></i></div>';
+
+                    html += `
+            <div class="col-md-6 col-lg-4">
+              <div class="product-card">
+                ${imgHtml}
+                <div class="product-body">
+                  <div class="product-category">${escapeHTML(p.kategori)}</div>
+                  <h5 class="product-title">${escapeHTML(p.nama)}</h5>
+                  <p class="product-desc">${escapeHTML(p.deskripsi)}</p>
+                  <div class="product-price">${formatRupiah(p.harga)}</div>
+                  <button class="btn btn-primary w-100 mt-auto" onclick="buyProduct('${escapeHTML(p.nama)}', '${escapeHTML(p.link)}')">
+                    <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+                });
+                container.innerHTML = html;
+            }
+
+            window.buyProduct = function (nama, link) {
+                Swal.fire({
+                    title: 'Beli Produk',
+                    text: 'Anda akan diarahkan untuk membeli: ' + nama,
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Lanjutkan',
+                    cancelButtonText: 'Batal'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        window.open(link, '_blank');
+                    }
+                });
+            };
+
+            // ================= LOGIN LOGIC =================
+            window.handleLogin = function (e) {
+                e.preventDefault();
+                var u = document.getElementById('loginUsername').value;
+                var p = document.getElementById('loginPassword').value;
+                var btn = document.getElementById('btnLogin');
+
+                btn.disabled = true;
+                btn.innerText = 'Memeriksa...';
+                showFullPageLoading(true);
+
+                // Simulasi network
+                setTimeout(function () {
+                    btn.disabled = false;
+                    btn.innerText = 'Masuk';
+                    showFullPageLoading(false);
+
+                    if (u === 'admin' && p === 'bismillah') {
+                        Auth.login('mock-token-123', { username: 'admin', fullname: 'Administrator', role: 'Admin' });
+                        document.getElementById('loginForm').reset();
+                        checkLoginState();
+                    } else {
+                        Swal.fire('Gagal', 'Username atau password salah (Gunakan admin / bismillah)', 'error');
+                    }
+                }, 800);
+            };
+
+            window.logout = function () {
+                Auth.clear();
+                checkLoginState();
+            };
+
+            // ================= KATEGORI LOGIC (ADMIN) =================
+            var modalKategoriObj;
+
+            window.openKategoriModal = function (id) {
+                if (!modalKategoriObj) modalKategoriObj = new bootstrap.Modal(document.getElementById('modalKategori'));
+                document.getElementById('formKategori').reset();
+                document.getElementById('katId').value = '';
+                document.getElementById('modalKategoriTitle').innerText = 'Tambah Kategori';
+
+                if (id) {
+                    var k = mockCategories.find(function (x) { return x.id === id; });
+                    if (k) {
+                        document.getElementById('katId').value = k.id;
+                        document.getElementById('katNama').value = k.nama;
+                        document.getElementById('modalKategoriTitle').innerText = 'Edit Kategori';
+                    }
+                }
+                modalKategoriObj.show();
+            };
+
+            function renderKategoriTable() {
+                var tbody = document.getElementById('kategoriTableBody');
+                var html = '';
+                if (mockCategories.length === 0) {
+                    html = '<tr><td colspan="3" class="text-center text-muted">Belum ada kategori.</td></tr>';
+                } else {
+                    mockCategories.forEach(function (k) {
+                        html += '<tr>';
+                        html += '<td>' + escapeHTML(k.id) + '</td>';
+                        html += '<td>' + escapeHTML(k.nama) + '</td>';
+                        html += '<td class="text-end">';
+                        html += '<button class="btn btn-sm btn-outline-primary me-1" onclick="openKategoriModal(\'' + k.id + '\')"><i class="fas fa-edit"></i></button>';
+                        html += '<button class="btn btn-sm btn-outline-danger" onclick="deleteKategori(\'' + k.id + '\')"><i class="fas fa-trash"></i></button>';
+                        html += '</td>';
+                        html += '</tr>';
+                    });
+                }
+                tbody.innerHTML = html;
+            }
+
+            window.saveKategori = function (e) {
+                e.preventDefault();
+                var id = document.getElementById('katId').value;
+                var nama = document.getElementById('katNama').value;
+                var btn = document.getElementById('btnSaveKategori');
+
+                btn.disabled = true;
+                btn.innerText = 'Menyimpan...';
+
+                setTimeout(function () {
+                    if (id) {
+                        var idx = mockCategories.findIndex(function (x) { return x.id === id; });
+                        if (idx > -1) mockCategories[idx].nama = nama;
+                    } else {
+                        mockCategories.push({ id: generateId(), nama: nama });
+                    }
+
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan';
+                    modalKategoriObj.hide();
+                    Swal.fire('Sukses', 'Data kategori berhasil disimpan', 'success');
+                    renderKategoriTable();
+                }, 500);
+            };
+
+            window.deleteKategori = function (id) {
+                Swal.fire({
+                    title: 'Hapus Kategori?',
+                    text: 'Data tidak dapat dikembalikan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        mockCategories = mockCategories.filter(function (x) { return x.id !== id; });
+                        renderKategoriTable();
+                        Swal.fire('Terhapus!', 'Kategori telah dihapus.', 'success');
+                    }
+                });
+            };
+
+            // ================= PRODUK LOGIC (ADMIN) =================
+            var modalProdukObj;
+
+            window.openProdukModal = function (id) {
+                if (!modalProdukObj) modalProdukObj = new bootstrap.Modal(document.getElementById('modalProduk'));
+                document.getElementById('formProduk').reset();
+                document.getElementById('prodId').value = '';
+                document.getElementById('modalProdukTitle').innerText = 'Tambah Produk';
+
+                // Populate Select
+                var sel = document.getElementById('prodKategori');
+                sel.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+                mockCategories.forEach(function (k) {
+                    sel.innerHTML += '<option value="' + escapeHTML(k.nama) + '">' + escapeHTML(k.nama) + '</option>';
+                });
+
+                if (id) {
+                    var p = mockProducts.find(function (x) { return x.id === id; });
+                    if (p) {
+                        document.getElementById('prodId').value = p.id;
+                        document.getElementById('prodNama').value = p.nama;
+                        document.getElementById('prodKategori').value = p.kategori;
+                        document.getElementById('prodHarga').value = p.harga;
+                        document.getElementById('prodGambar').value = p.gambar;
+                        document.getElementById('prodDeskripsi').value = p.deskripsi;
+                        document.getElementById('prodLink').value = p.link;
+                        document.getElementById('modalProdukTitle').innerText = 'Edit Produk';
+                    }
+                }
+                modalProdukObj.show();
+            };
+
+            function renderProdukTable() {
+                var tbody = document.getElementById('produkTableBody');
+                var html = '';
+                if (mockProducts.length === 0) {
+                    html = '<tr><td colspan="5" class="text-center text-muted">Belum ada produk.</td></tr>';
+                } else {
+                    mockProducts.forEach(function (p) {
+                        var img = p.gambar ? '<img src="' + escapeHTML(p.gambar) + '" width="40" height="40" style="object-fit:cover; border-radius:5px;">' : '<div style="width:40px;height:40px;background:#e9ecef;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#adb5bd;"><i class="fas fa-image"></i></div>';
+                        html += '<tr>';
+                        html += '<td>' + img + '</td>';
+                        html += '<td><strong>' + escapeHTML(p.nama) + '</strong><br><small class="text-muted text-truncate d-inline-block" style="max-width:200px;">' + escapeHTML(p.deskripsi) + '</small></td>';
+                        html += '<td><span class="badge bg-secondary">' + escapeHTML(p.kategori) + '</span></td>';
+                        html += '<td>' + formatRupiah(p.harga) + '</td>';
+                        html += '<td class="text-end">';
+                        html += '<button class="btn btn-sm btn-outline-primary me-1" onclick="openProdukModal(\'' + p.id + '\')"><i class="fas fa-edit"></i></button>';
+                        html += '<button class="btn btn-sm btn-outline-danger" onclick="deleteProduk(\'' + p.id + '\')"><i class="fas fa-trash"></i></button>';
+                        html += '</td>';
+                        html += '</tr>';
+                    });
+                }
+                tbody.innerHTML = html;
+            }
+
+            window.saveProduk = function (e) {
+                e.preventDefault();
+                var id = document.getElementById('prodId').value;
+                var btn = document.getElementById('btnSaveProduk');
+
+                var payload = {
+                    nama: document.getElementById('prodNama').value,
+                    kategori: document.getElementById('prodKategori').value,
+                    harga: parseInt(document.getElementById('prodHarga').value) || 0,
+                    gambar: document.getElementById('prodGambar').value,
+                    deskripsi: document.getElementById('prodDeskripsi').value,
+                    link: document.getElementById('prodLink').value
+                };
+
+                btn.disabled = true;
+                btn.innerText = 'Menyimpan...';
+
+                setTimeout(function () {
+                    if (id) {
+                        var idx = mockProducts.findIndex(function (x) { return x.id === id; });
+                        if (idx > -1) {
+                            payload.id = id;
+                            mockProducts[idx] = payload;
+                        }
+                    } else {
+                        payload.id = generateId();
+                        mockProducts.push(payload);
+                    }
+
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan';
+                    modalProdukObj.hide();
+                    Swal.fire('Sukses', 'Data produk berhasil disimpan', 'success');
+                    renderProdukTable();
+                }, 500);
+            };
+
+            window.deleteProduk = function (id) {
+                Swal.fire({
+                    title: 'Hapus Produk?',
+                    text: 'Data tidak dapat dikembalikan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        mockProducts = mockProducts.filter(function (x) { return x.id !== id; });
+                        renderProdukTable();
+                        Swal.fire('Terhapus!', 'Produk telah dihapus.', 'success');
+                    }
+                });
+            };
+
+        })();
+    </script>
+</body>
+
+</html>
