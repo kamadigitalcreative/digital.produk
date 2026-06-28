@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DigiStore - Produk Digital</title>
+    <title>Kama Creative - Produk Digital</title>
+    <!-- Tambahkan Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -12,7 +16,7 @@
         /* Global */
         body {
             background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .d-none {
@@ -49,28 +53,20 @@
 
         /* Landing Page */
         .hero {
-            background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%);
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #4338ca);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             position: relative;
             color: white;
-            padding: 50px 0 40px;
+            padding: 60px 0 50px;
             text-align: center;
             overflow: hidden;
         }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-            animation: rotate 20s linear infinite;
-        }
         
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .hero .container {
@@ -421,12 +417,14 @@
         <!-- Footer -->
         <div class="footer">
             <div class="container">
-                <h4 class="mb-3">DigiStore</h4>
+                <h4 class="mb-3">Kama Creative</h4>
                 <p class="mb-4 text-muted">Koleksi produk digital berkualitas untuk kreator, desainer, dan developer.</p>
                 <hr class="border-secondary opacity-25">
                 <div class="d-flex justify-content-between align-items-center mt-4">
-                    <small class="text-muted">&copy; 2026 DigiStore. All rights reserved.</small>
-                    <a href="#" class="footer-link" onclick="event.preventDefault(); showAdminLogin();"><i class="fas fa-lock me-1"></i> Admin Login</a>
+                    <small class="text-muted">&copy; 2026 Kama Creative. All rights reserved.</small>
+                    <a href="#" class="footer-link" onclick="event.preventDefault(); showAdminLogin();" title="Admin Login">
+                        <i class="fas fa-lock text-muted" style="opacity: 0.3;"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -436,7 +434,7 @@
     <section id="loginPage" class="auth-page d-none">
         <div class="auth-card">
             <div class="text-center mb-4">
-                <h3 class="font-weight-bold text-primary"><i class="fas fa-store"></i> DigiStore Admin</h3>
+                <h3 class="font-weight-bold text-primary"><i class="fas fa-store"></i> Kama Creative</h3>
                 <p class="text-muted">Login untuk mengelola produk</p>
             </div>
             <form id="loginForm" onsubmit="handleLogin(event)">
@@ -462,7 +460,7 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <i class="fas fa-store text-primary"></i> DigiStore Admin
+                <i class="fas fa-store text-primary"></i> Kama Creative
             </div>
             <div class="mt-3">
                 <a class="nav-item-custom active" onclick="showPage('dashboard', this)">
@@ -925,12 +923,12 @@
                     btn.innerText = 'Masuk';
                     showFullPageLoading(false);
 
-                    if (u === 'admin' && p === 'bismillah') {
+                    if (u === 'admin' && p === 'km123456789') {
                         Auth.login('mock-token-123', { username: 'admin', fullname: 'Administrator', role: 'Admin' });
                         document.getElementById('loginForm').reset();
                         checkLoginState();
                     } else {
-                        Swal.fire('Gagal', 'Username atau password salah (Gunakan admin / bismillah)', 'error');
+                        Swal.fire('Gagal', 'Username atau password salah', 'error');
                     }
                 }, 800);
             };
