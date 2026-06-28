@@ -431,6 +431,53 @@
             margin-bottom: 5px;
             color: #4f46e5;
         }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .quote-icon {
+            font-size: 4rem;
+            color: rgba(79, 70, 229, 0.08);
+            position: absolute;
+            top: 20px;
+            left: 30px;
+        }
+
+        .testimonial-text {
+            font-size: 1.35rem;
+            font-style: italic;
+            line-height: 1.8;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .testimonial-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4f46e5;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.2);
+        }
     </style>
 </head>
 
@@ -1088,12 +1135,17 @@
                     var active = idx === 0 ? 'active' : '';
                     var avatar = t.avatar ? escapeHTML(t.avatar) : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(t.nama) + '&background=random';
                     html += `
-                    <div class="carousel-item ${active}">
-                        <div class="d-flex flex-column align-items-center text-center p-4">
-                            <img src="${avatar}" alt="${escapeHTML(t.nama)}" class="rounded-circle mb-3 shadow" style="width: 100px; height: 100px; object-fit: cover; border: 4px solid var(--card-bg);">
-                            <h5 class="fw-bold mb-1">${escapeHTML(t.nama)}</h5>
-                            <p class="text-muted mb-4 small">${escapeHTML(t.peran)}</p>
-                            <p class="lead fst-italic" style="max-width: 700px;">"${escapeHTML(t.teks)}"</p>
+                    <div class="carousel-item ${active} py-4">
+                        <div class="testimonial-card">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <p class="testimonial-text">"${escapeHTML(t.teks)}"</p>
+                            <div class="testimonial-author">
+                                <img src="${avatar}" alt="${escapeHTML(t.nama)}" class="testimonial-avatar">
+                                <div class="text-start">
+                                    <h6 class="mb-0 fw-bold" style="color: var(--text-color);">${escapeHTML(t.nama)}</h6>
+                                    <small class="text-muted" style="font-size: 0.85rem;">${escapeHTML(t.peran)}</small>
+                                </div>
+                            </div>
                         </div>
                     </div>`;
                 });
