@@ -435,48 +435,50 @@
         .testimonial-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 50px 40px;
-            max-width: 800px;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 600px;
             margin: 0 auto;
             position: relative;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
         }
 
         .quote-icon {
-            font-size: 4rem;
-            color: rgba(79, 70, 229, 0.08);
-            position: absolute;
-            top: 20px;
-            left: 30px;
+            font-size: 2.5rem;
+            color: rgba(79, 70, 229, 0.15);
+            margin-bottom: 15px;
+            position: static;
         }
 
         .testimonial-text {
-            font-size: 1.35rem;
+            font-size: 1.05rem;
             font-style: italic;
-            line-height: 1.8;
+            line-height: 1.6;
             color: var(--text-color);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             position: relative;
             z-index: 1;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .testimonial-author {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 15px;
+            margin-top: auto;
         }
 
         .testimonial-avatar {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #4f46e5;
-            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.2);
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
