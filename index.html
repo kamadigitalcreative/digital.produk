@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.png" type="image/png">
     <title>Kama Creative - Produk Digital</title>
     <!-- Tambahkan Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -189,13 +190,16 @@
         .product-img-wrapper {
             position: relative;
             overflow: hidden;
+            background-color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .product-img {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background-color: #f8fafc;
+            aspect-ratio: 16/9;
+            object-fit: contain;
             display: flex;
             align-items: center;
             justify-content: center;
