@@ -434,79 +434,72 @@
 
         .testimonial-slider-container {
             width: 100%;
-            overflow: hidden;
+            overflow-x: auto;
             position: relative;
-            padding: 20px 0;
+            padding: 20px 0 40px;
             white-space: nowrap;
+            text-align: center;
+            scrollbar-width: none;
+        }
+
+        .testimonial-slider-container::-webkit-scrollbar {
+            display: none;
         }
 
         .testimonial-track {
-            display: inline-block;
-            animation: scroll-testimonials 30s linear infinite;
-        }
-
-        .testimonial-track:hover {
-            animation-play-state: paused;
-        }
-
-        @keyframes scroll-testimonials {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            display: inline-flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+            min-width: 100%;
         }
 
         .testimonial-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 30px;
-            width: 400px;
-            margin: 0 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-            text-align: left;
-            display: inline-flex;
+            width: 350px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            text-align: center;
+            display: flex;
             flex-direction: column;
             white-space: normal;
-            vertical-align: top;
+            border: 1px solid rgba(0,0,0,0.05);
             transition: transform 0.3s ease;
         }
 
         .testimonial-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
 
-        .quote-icon {
-            font-size: 2.5rem;
-            color: rgba(79, 70, 229, 0.15);
+        .stars-container {
+            color: #fbbf24;
+            font-size: 1.1rem;
             margin-bottom: 15px;
-            position: static;
+            letter-spacing: 2px;
         }
 
         .testimonial-text {
-            font-size: 1.05rem;
-            font-style: italic;
+            font-size: 0.95rem;
             line-height: 1.6;
             color: var(--text-color);
+            opacity: 0.8;
             margin-bottom: 25px;
-            position: relative;
-            z-index: 1;
-            font-weight: 400;
+            flex-grow: 1;
         }
 
         .testimonial-author {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 15px;
-            margin-top: auto;
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 1rem;
+            margin-bottom: 2px;
         }
-
-        .testimonial-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #e2e8f0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        
+        .testimonial-role {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.6;
         }
     </style>
 </head>
@@ -567,8 +560,11 @@
         </div>
 
         <!-- Testimonial Section -->
-        <div class="container-fluid mt-5 pt-5 pb-5 border-top d-none" id="publicTestimonialSection" style="overflow:hidden;">
-            <h2 class="text-center fw-bold mb-5">Apa Kata Mereka?</h2>
+        <div class="container-fluid mt-5 pt-5 pb-5 d-none" id="publicTestimonialSection" style="background-color: var(--bg-color); overflow:hidden;">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-2">Testimoni</h2>
+                <p class="text-muted" style="font-size: 1.05rem;">Ribuan pengguna sudah merasakan kemudahan layanan kami</p>
+            </div>
             <div class="testimonial-slider-container">
                 <div class="testimonial-track" id="testimonialContainer">
                     <!-- Rendered by JS -->
@@ -978,8 +974,9 @@
             ];
 
             var defaultTestimonials = [
-                { id: 'testi_1', nama: 'Budi Santoso', peran: 'Kolektor Sepatu', teks: 'Kualitas barangnya 100% original, pengirimannya juga sangat cepat. Rekomendasi!', avatar: '' },
-                { id: 'testi_2', nama: 'Siti Rahma', peran: 'Fashion Enthusiast', teks: 'Hoodienya pas banget di badan, bahannya tebal tapi tidak panas. Mantap!', avatar: '' }
+                { id: 'testi_1', nama: 'Budi Santoso', peran: 'Freelancer', teks: 'Akun premiumnya sangat lancar digunakan, harganya juga jauh lebih murah. Bakal langganan terus di sini!', avatar: '' },
+                { id: 'testi_2', nama: 'Siti Rahma', peran: 'Content Creator', teks: 'Template desain yang disediakan sangat lengkap dan mudah diedit. Sangat membantu pekerjaan saya.', avatar: '' },
+                { id: 'testi_3', nama: 'Andi Pratama', peran: 'Business Owner', teks: 'Pelayanan sangat cepat, admin ramah dan responnya kilat. Produk digitalnya work 100% tanpa kendala.', avatar: '' }
             ];
 
             var mockCategories = [...defaultCategories];
@@ -1159,21 +1156,23 @@
                 section.classList.remove('d-none');
                 var cardsHtml = '';
                 mockTestimonials.forEach(function(t) {
-                    var avatar = t.avatar ? escapeHTML(t.avatar) : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(t.nama) + '&background=random';
                     cardsHtml += `
                         <div class="testimonial-card">
-                            <i class="fas fa-quote-left quote-icon"></i>
+                            <div class="stars-container">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
                             <p class="testimonial-text">"${escapeHTML(t.teks)}"</p>
-                            <div class="testimonial-author">
-                                <img src="${avatar}" alt="${escapeHTML(t.nama)}" class="testimonial-avatar">
-                                <div class="text-start">
-                                    <h6 class="mb-0 fw-bold" style="color: var(--text-color);">${escapeHTML(t.nama)}</h6>
-                                    <small class="text-muted" style="font-size: 0.85rem;">${escapeHTML(t.peran)}</small>
-                                </div>
+                            <div>
+                                <div class="testimonial-author">${escapeHTML(t.nama)}</div>
+                                <div class="testimonial-role">${escapeHTML(t.peran)}</div>
                             </div>
                         </div>`;
                 });
-                container.innerHTML = cardsHtml + cardsHtml;
+                container.innerHTML = cardsHtml;
             }
 
             // ================= PUBLIC LANDING PAGE LOGIC =================
