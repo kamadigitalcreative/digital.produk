@@ -1325,6 +1325,7 @@
                             renderPublicCategories();
                             renderPublicProducts();
                             renderPublicTestimonials();
+                            updateLiveMarquee();
                             if(activePage === 'dashboard') loadPageData('dashboard');
                             if(activePage === 'kategori') renderKategoriTable();
                             if(activePage === 'produk') renderProdukTable();
@@ -1383,18 +1384,26 @@
             window.addEventListener('DOMContentLoaded', function () {
                 checkLoginState();
                 
-                // Render initial mock data to prevent blank screen while loading
-                renderPublicCategories();
-                renderPublicProducts();
-                renderPublicTestimonials();
-                updateLiveMarquee();
-                setInterval(updateLiveMarquee, 15000);
-                
                 if (SCRIPT_URL && SCRIPT_URL !== 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI') {
+                    // Kosongkan mock data agar tidak flash
+                    mockCategories = [];
+                    mockProducts = [];
+                    mockTestimonials = [];
+                    
+                    // Tampilkan skeleton/loading sederhana di area produk
+                    document.getElementById('publicProductGrid').innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><div class="mt-3 text-muted">Memuat Data...</div></div>';
+                    
                     loadDataFromDatabase();
                 } else {
                     console.log('SCRIPT_URL belum dikonfigurasi. Menggunakan mock data.');
+                    renderPublicCategories();
+                    renderPublicProducts();
+                    renderPublicTestimonials();
                 }
+                
+                // Set interval marquee
+                updateLiveMarquee();
+                setInterval(updateLiveMarquee, 15000);
             });
 
             // ================= NAVIGATION =================
