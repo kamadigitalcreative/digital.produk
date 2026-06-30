@@ -124,6 +124,7 @@
         .brand-logo-text {
             background: linear-gradient(90deg, #ec4899, #8b5cf6);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -320,24 +321,30 @@
 
         .badge-bestseller {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #ef4444;
+            bottom: 15px;
+            left: 15px;
+            background: #3b82f6;
             color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 700;
             z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .product-img-wrapper {
             position: relative;
-            padding: 15px;
+            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: transparent;
+            background-color: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+            margin: 8px 8px 0 8px;
+            border-radius: 12px;
         }
 
         .product-img {
@@ -353,7 +360,7 @@
         }
 
         .product-body {
-            padding: 0 15px 15px;
+            padding: 15px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -366,27 +373,30 @@
             font-weight: 600;
             margin-bottom: 5px;
             text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .product-title {
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             color: var(--text-color);
             line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
         .product-price-wrapper {
-            margin-top: auto;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
         }
 
         .product-price-coret {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #94a3b8;
             text-decoration: line-through;
             display: block;
@@ -394,9 +404,77 @@
         }
 
         .product-price {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: #2563eb;
+        }
+        
+        .product-sold {
+            font-size: 0.85rem;
+            color: #ea580c;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .product-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 10px 0;
+        }
+
+        .stock-progress-container {
+            margin-bottom: 15px;
+        }
+
+        .stock-progress-bar {
+            height: 6px;
+            background-color: #fef08a;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .stock-progress-fill {
+            height: 100%;
+            background-color: #f59e0b;
+            border-radius: 10px;
+        }
+
+        .stock-text {
+            font-size: 0.8rem;
+            color: #d97706;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .btn-cart-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #3b82f6;
+            background: transparent;
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .btn-cart-icon:hover {
+            background: #eff6ff;
         }
 
         .btn-buy {
@@ -404,12 +482,14 @@
             border: 1px solid #3b82f6;
             color: white;
             font-weight: 600;
-            padding: 8px;
-            border-radius: 8px;
+            border-radius: 50px;
             transition: all 0.2s;
-            width: 100%;
+            flex-grow: 1;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .btn-buy:hover {
@@ -1142,6 +1222,14 @@
                                 <input type="number" class="form-control" id="prodHargaCoret">
                             </div>
                             <div class="col-md-6 mb-3">
+                                <label class="form-label">Terjual Awal</label>
+                                <input type="number" class="form-control" id="prodTerjual" value="0" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stok / Sisa Produk</label>
+                                <input type="number" class="form-control" id="prodStok" value="100" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
                                 <label class="form-label">Batas Waktu Promo (Opsional)</label>
                                 <input type="datetime-local" class="form-control" id="prodBatasPromo">
                             </div>
@@ -1209,11 +1297,11 @@
             ];
             
             var defaultProducts = [
-                { id: 'prod_1', nama: 'Netflix Premium 1 Bulan (Sharing)', kategori: 'App Premium', harga: 35000, hargaCoret: 50000, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Netflix_2015_N_logo.svg/1200px-Netflix_2015_N_logo.svg.png', deskripsi: 'Akun sharing bergaransi 1 bulan penuh, anti hold, 4K UHD.', link: '#', badge: 'PROMO TERUS' },
-                { id: 'prod_2', nama: 'Spotify Premium 1 Bulan', kategori: 'App Premium', harga: 20000, hargaCoret: 0, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1024px-Spotify_logo_without_text.svg.png', deskripsi: 'Bebas iklan, skip lagu tanpa batas, bisa download.', link: '#', badge: 'GARANSI RESMI' },
-                { id: 'prod_3', nama: 'Canva Pro Edu 1 Tahun', kategori: 'App Premium', harga: 15000, hargaCoret: 45000, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Canva_icon_2021.svg/1200px-Canva_icon_2021.svg.png', deskripsi: 'Akses semua fitur pro canva, garansi 1 tahun penuh.', link: '#', batasPromo: '2026-12-31T23:59' },
-                { id: 'prod_4', nama: 'Mobile Legends 86 Diamonds', kategori: 'Topup Game', harga: 20000, hargaCoret: 22000, gambar: 'https://upload.wikimedia.org/wikipedia/id/3/36/Mobile_Legends_Bang_Bang_logo.png', deskripsi: 'Proses instan via ID.', link: '#', badge: 'FLASH SALE' },
-                { id: 'prod_5', nama: 'SEMrush Guru 14 Hari', kategori: 'Tools SEO', harga: 55000, hargaCoret: 0, gambar: 'https://cdn.iconscout.com/icon/free/png-256/free-semrush-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-5-pack-logos-icons-2945115.png?f=webp&w=256', deskripsi: 'Akun private SEMrush Guru durasi 14 hari.', link: '#' }
+                { id: 'prod_1', nama: 'Netflix Premium 1 Bulan (Sharing)', kategori: 'App Premium', harga: 35000, hargaCoret: 50000, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Netflix_2015_N_logo.svg/1200px-Netflix_2015_N_logo.svg.png', deskripsi: 'Akun sharing bergaransi 1 bulan penuh, anti hold, 4K UHD.', link: '#', badge: '⚡ 5 MENIT', terjual: 359, stok: 7 },
+                { id: 'prod_2', nama: 'Spotify Premium 1 Bulan', kategori: 'App Premium', harga: 20000, hargaCoret: 0, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1024px-Spotify_logo_without_text.svg.png', deskripsi: 'Bebas iklan, skip lagu tanpa batas, bisa download.', link: '#', badge: '🔥 HOT', terjual: 1205, stok: 50 },
+                { id: 'prod_3', nama: 'Canva Pro Edu 1 Tahun', kategori: 'App Premium', harga: 15000, hargaCoret: 45000, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Canva_icon_2021.svg/1200px-Canva_icon_2021.svg.png,https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Canva_icon_2021.svg/1200px-Canva_icon_2021.svg.png', deskripsi: 'Akses semua fitur pro canva, garansi 1 tahun penuh.', link: '#', batasPromo: '2026-12-31T23:59', terjual: 85, stok: 15 },
+                { id: 'prod_4', nama: 'Mobile Legends 86 Diamonds', kategori: 'Topup Game', harga: 20000, hargaCoret: 22000, gambar: 'https://upload.wikimedia.org/wikipedia/id/3/36/Mobile_Legends_Bang_Bang_logo.png', deskripsi: 'Proses instan via ID.', link: '#', badge: 'PROMO', terjual: 2430, stok: 100 },
+                { id: 'prod_5', nama: 'SEMrush Guru 14 Hari', kategori: 'Tools SEO', harga: 55000, hargaCoret: 0, gambar: 'https://cdn.iconscout.com/icon/free/png-256/free-semrush-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-5-pack-logos-icons-2945115.png?f=webp&w=256', deskripsi: 'Akun private SEMrush Guru durasi 14 hari.', link: '#', terjual: 42, stok: 3 }
             ];
 
             var defaultTestimonials = [
@@ -1482,31 +1570,47 @@
                         coverImg = p.gambar.split(',')[0];
                     }
                     var imgHtml = coverImg ? '<img src="' + escapeHTML(coverImg) + '" class="product-img" alt="Product">' : '<div class="product-img"><i class="fas fa-image"></i></div>';
-                    var badgeHtml = p.badge ? '<div class="badge-bestseller">' + escapeHTML(p.badge) + '</div>' : '';
-                    var promoHtml = '';
-                    if (p.batasPromo) {
-                        promoHtml = '<div class="promo-timer" data-time="' + escapeHTML(p.batasPromo) + '" style="font-size:0.85rem; color:#ef4444; font-weight:700; margin-bottom:10px;"><i class="fas fa-clock"></i> <span>Menghitung...</span></div>';
-                    }
+                    var badgeHtml = p.badge ? '<div class="badge-bestseller"><i class="fas fa-bolt"></i> ' + escapeHTML(p.badge) + '</div>' : '';
+                    
+                    var terjualVal = p.terjual || 0;
+                    var stokVal = p.stok || 100;
+                    // Calculate a simple percentage for the mock progress bar (e.g. out of max 100)
+                    var progressPercent = (stokVal / 100) * 100;
+                    if(progressPercent > 100) progressPercent = 100;
+                    if(progressPercent < 5) progressPercent = 5; // Minimum visible
 
                     html += `
             <div class="col-md-4 col-lg-3 col-sm-6 col-6 mb-3">
               <div class="product-card">
-                ${badgeHtml}
                 <div class="product-img-wrapper" onclick="openPublicDetail('${p.id}')" style="cursor:pointer;">
                     ${imgHtml}
+                    ${badgeHtml}
                 </div>
                 <div class="product-body">
-                  <div class="product-category">${escapeHTML(p.kategori)}</div>
+                  <div class="product-category"><i class="fas fa-th-large"></i> ${escapeHTML(p.kategori)}</div>
                   <h5 class="product-title" onclick="openPublicDetail('${p.id}')" style="cursor:pointer;">${escapeHTML(p.nama)}</h5>
-                  <div class="mb-2">
-                    <small class="text-warning"><i class="fas fa-star"></i> 5.0</small>
-                    <small class="text-muted ms-1">(1k+ terjual)</small>
-                  </div>
                   <div class="product-price-wrapper">
                     ${p.hargaCoret > 0 ? '<span class="product-price-coret">' + formatRupiah(p.hargaCoret) + '</span>' : ''}
                     <div class="product-price">${formatRupiah(p.harga)}</div>
                   </div>
-                  <button class="btn-buy" onclick="buyProduct('${escapeHTML(p.nama)}', '${escapeHTML(p.link)}')">Beli Sekarang</button>
+                  
+                  <div class="product-sold">
+                    <i class="fas fa-cart-arrow-down"></i> ${terjualVal} Terjual
+                  </div>
+                  
+                  <div class="product-divider"></div>
+                  
+                  <div class="stock-progress-container">
+                      <div class="stock-progress-bar">
+                          <div class="stock-progress-fill" style="width: ${progressPercent}%"></div>
+                      </div>
+                      <div class="stock-text"><i class="fas fa-fire"></i> Sisa ${stokVal} lagi!</div>
+                  </div>
+                  
+                  <div class="product-actions">
+                      <button class="btn-cart-icon" onclick="openPublicDetail('${p.id}')"><i class="fas fa-cart-plus"></i></button>
+                      <button class="btn-buy" onclick="buyProduct('${p.id}')">Beli Sekarang</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1515,8 +1619,14 @@
                 container.innerHTML = html;
             }
 
-            window.buyProduct = function (nama, link) {
-                window.open(link, '_blank');
+            window.buyProduct = function (id) {
+                var p = mockProducts.find(x => x.id === id);
+                if(p) {
+                    p.terjual = (p.terjual || 0) + 1;
+                    if(p.stok && p.stok > 0) p.stok -= 1;
+                    renderPublicProducts(); // re-render to show updated sold/stok
+                    window.open(p.link, '_blank');
+                }
             };
 
             var modalPublicDetailObj;
@@ -1547,7 +1657,7 @@
                 
                 var btnBeli = document.getElementById('btnDetailBeli');
                 btnBeli.onclick = function() {
-                    buyProduct(p.nama, p.link);
+                    buyProduct(p.id);
                 };
                 
                 var carouselInner = document.getElementById('detailCarouselInner');
@@ -1733,6 +1843,8 @@
                 if (!modalProdukObj) modalProdukObj = new bootstrap.Modal(document.getElementById('modalProduk'));
                 document.getElementById('formProduk').reset();
                 document.getElementById('prodId').value = '';
+                document.getElementById('prodTerjual').value = '0';
+                document.getElementById('prodStok').value = '100';
                 document.getElementById('prodBatasPromo').value = '';
                 document.getElementById('prodGambarFile').value = '';
                 document.getElementById('prodGambarUrls').value = '';
@@ -1754,6 +1866,8 @@
                         document.getElementById('prodKategori').value = p.kategori;
                         document.getElementById('prodHarga').value = p.harga;
                         document.getElementById('prodHargaCoret').value = p.hargaCoret || '';
+                        document.getElementById('prodTerjual').value = p.terjual || 0;
+                        document.getElementById('prodStok').value = p.stok || 0;
                         document.getElementById('prodBatasPromo').value = p.batasPromo || '';
                         document.getElementById('prodGambarUrls').value = p.gambar || '';
                         var preview = document.getElementById('uploadPreview');
@@ -1867,6 +1981,8 @@
                     kategori: document.getElementById('prodKategori').value,
                     harga: parseInt(document.getElementById('prodHarga').value) || 0,
                     hargaCoret: parseInt(document.getElementById('prodHargaCoret').value) || 0,
+                    terjual: parseInt(document.getElementById('prodTerjual').value) || 0,
+                    stok: parseInt(document.getElementById('prodStok').value) || 0,
                     batasPromo: document.getElementById('prodBatasPromo').value,
                     gambar: uploadedUrls.join(','),
                     deskripsi: document.getElementById('prodDeskripsi').value,
