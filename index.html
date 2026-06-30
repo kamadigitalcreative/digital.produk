@@ -1313,11 +1313,14 @@
             var mockTestimonials = [...defaultTestimonials];
 
             function loadDataFromDatabase(showLoader = false) {
-                if (showLoader) showFullPageLoading(true);
+                var cached = localStorage.getItem('kama_creative_cache');
+                if (showLoader && !cached) showFullPageLoading(true);
                 fetch(SCRIPT_URL)
                     .then(response => response.json())
                     .then(res => {
                         if (res.status === 'success') {
+                            localStorage.setItem('kama_creative_cache', JSON.stringify(res.data));
+                            
                             if (res.data.categories && res.data.categories.length > 0) mockCategories = res.data.categories;
                             if (res.data.products && res.data.products.length > 0) mockProducts = res.data.products;
                             if (res.data.testimonials && res.data.testimonials.length > 0) mockTestimonials = res.data.testimonials;
@@ -1336,11 +1339,13 @@
                     })
                     .catch(err => {
                         console.error('Network error:', err);
-                        renderPublicCategories();
-                        renderPublicProducts();
+                        if (!cached) {
+                            renderPublicCategories();
+                            renderPublicProducts();
+                        }
                     })
                     .finally(() => {
-                        if (showLoader) showFullPageLoading(false);
+                        if (showLoader && !cached) showFullPageLoading(false);
                     });
             }
 
@@ -1385,13 +1390,26 @@
                 checkLoginState();
                 
                 if (SCRIPT_URL && SCRIPT_URL !== 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI') {
-                    // Kosongkan mock data agar tidak flash
-                    mockCategories = [];
-                    mockProducts = [];
-                    mockTestimonials = [];
-                    
-                    // Tampilkan skeleton/loading sederhana di area produk
-                    document.getElementById('publicProductGrid').innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><div class="mt-3 text-muted">Memuat Data...</div></div>';
+                    var cached = localStorage.getItem('kama_creative_cache');
+                    if (cached) {
+                        try {
+                            var parsed = JSON.parse(cached);
+                            if (parsed.categories) mockCategories = parsed.categories;
+                            if (parsed.products) mockProducts = parsed.products;
+                            if (parsed.testimonials) mockTestimonials = parsed.testimonials;
+                            renderPublicCategories();
+                            renderPublicProducts();
+                            renderPublicTestimonials();
+                        } catch(e) {}
+                    } else {
+                        // Kosongkan mock data agar tidak flash jika belum ada cache
+                        mockCategories = [];
+                        mockProducts = [];
+                        mockTestimonials = [];
+                        
+                        // Tampilkan skeleton/loading sederhana di area produk
+                        document.getElementById('publicProductGrid').innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><div class="mt-3 text-muted">Memuat Data...</div></div>';
+                    }
                     
                     loadDataFromDatabase();
                 } else {
