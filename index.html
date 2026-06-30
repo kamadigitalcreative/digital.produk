@@ -986,8 +986,8 @@
             var mockProducts = [...defaultProducts];
             var mockTestimonials = [...defaultTestimonials];
 
-            function loadDataFromDatabase() {
-                showFullPageLoading(true);
+            function loadDataFromDatabase(showLoader = false) {
+                if (showLoader) showFullPageLoading(true);
                 fetch(SCRIPT_URL)
                     .then(response => response.json())
                     .then(res => {
@@ -1013,7 +1013,7 @@
                         renderPublicProducts();
                     })
                     .finally(() => {
-                        showFullPageLoading(false);
+                        if (showLoader) showFullPageLoading(false);
                     });
             }
 
