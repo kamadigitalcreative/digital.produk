@@ -1057,12 +1057,15 @@
             window.addEventListener('DOMContentLoaded', function () {
                 checkLoginState();
                 
+                // Render initial mock data to prevent blank screen while loading
+                renderPublicCategories();
+                renderPublicProducts();
+                renderPublicTestimonials();
+                
                 if (SCRIPT_URL && SCRIPT_URL !== 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI') {
                     loadDataFromDatabase();
                 } else {
-                    renderPublicCategories();
-                    renderPublicProducts();
-                    console.log('SCRIPT_URL belum dikonfigurasi. Data masih kosong.');
+                    console.log('SCRIPT_URL belum dikonfigurasi. Menggunakan mock data.');
                 }
             });
 
