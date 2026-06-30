@@ -225,37 +225,7 @@
             background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6);
         }
         
-        .live-marquee {
-            background-color: var(--bg-color);
-            padding: 10px 0;
-            font-size: 0.85rem;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-        
-        .live-badge {
-            background-color: #ef4444;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .live-badge::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background-color: white;
-            border-radius: 50%;
-            display: inline-block;
-        }
+
 
         .category-filter {
             display: flex;
@@ -744,10 +714,7 @@
                 </div>
             </div>
             <div class="header-gradient-line mt-3"></div>
-            <div class="live-marquee">
-                <span class="live-badge">LIVE</span>
-                <span>🎉 <strong>Fajar</strong> baru membeli <strong>Netflix Premium 1 Bulan</strong> - 5 menit lalu</span>
-            </div>
+
         </header>
 
         <!-- Search Mobile -->
@@ -1328,7 +1295,6 @@
                             renderPublicCategories();
                             renderPublicProducts();
                             renderPublicTestimonials();
-                            updateLiveMarquee();
                             if(activePage === 'dashboard') loadPageData('dashboard');
                             if(activePage === 'kategori') renderKategoriTable();
                             if(activePage === 'produk') renderProdukTable();
@@ -1419,9 +1385,6 @@
                     renderPublicTestimonials();
                 }
                 
-                // Set interval marquee
-                updateLiveMarquee();
-                setInterval(updateLiveMarquee, 15000);
             });
 
             // ================= NAVIGATION =================
@@ -1533,26 +1496,6 @@
                 container.innerHTML = cardsHtml;
             }
             
-            // ================= LIVE PURCHASES SIMULATOR =================
-            function updateLiveMarquee() {
-                var marquee = document.getElementById('liveMarqueeText');
-                if(!marquee || mockProducts.length === 0) return;
-                
-                var names = ['Andi', 'Budi', 'Caca', 'Deni', 'Eka', 'Fajar', 'Gita', 'Hendra', 'Intan', 'Joko'];
-                var emojis = ['🎉', '🚀', '🔥', '✨', '⚡'];
-                
-                var purchases = [];
-                for(var i=0; i<3; i++) {
-                    var randomName = names[Math.floor(Math.random() * names.length)];
-                    var randomProduct = mockProducts[Math.floor(Math.random() * mockProducts.length)];
-                    var randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-                    var randomMin = Math.floor(Math.random() * 59) + 1;
-                    
-                    purchases.push(`${randomEmoji} <strong>${randomName}</strong> baru membeli <strong>${randomProduct.nama}</strong> - ${randomMin} menit lalu`);
-                }
-                
-                marquee.innerHTML = purchases.join(' &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; ');
-            }
 
             // ================= PUBLIC LANDING PAGE LOGIC =================
             window.filterPublicCategory = function (katName, el) {
