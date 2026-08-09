@@ -1543,10 +1543,13 @@
                 { id: 'cat_1', nama: 'App Premium' },
                 { id: 'cat_2', nama: 'Topup Game' },
                 { id: 'cat_3', nama: 'Tools SEO' },
-                { id: 'cat_4', nama: 'Template Website' }
+                { id: 'cat_4', nama: 'Template Website' },
+                { id: 'cat_5', nama: 'Fotografi' }
             ];
             
             var defaultProducts = [
+                { id: 'prod_photo', nama: 'Photo Selection', kategori: 'Fotografi', harga: 25000, hargaCoret: 50000, gambar: '', deskripsi: 'Layanan seleksi foto cepat dan efisien.', link: '#', terjual: 120, stok: 100 },
+                { id: 'prod_invoice', nama: 'Create Invoice', kategori: 'Fotografi', harga: 90000, hargaCoret: 150000, gambar: '', deskripsi: 'Solusi pembuatan invoice profesional.', link: '#', terjual: 85, stok: 100 },
                 { id: 'prod_1', nama: 'Netflix Premium 1 Bulan (Sharing)', kategori: 'App Premium', harga: 35000, hargaCoret: 50000, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Netflix_2015_N_logo.svg/1200px-Netflix_2015_N_logo.svg.png', deskripsi: 'Akun sharing bergaransi 1 bulan penuh, anti hold, 4K UHD.', link: '#', badge: '⚡ 5 MENIT', terjual: 359, stok: 7 },
                 { id: 'prod_2', nama: 'Spotify Premium 1 Bulan', kategori: 'App Premium', harga: 20000, hargaCoret: 0, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1024px-Spotify_logo_without_text.svg.png', deskripsi: 'Bebas iklan, skip lagu tanpa batas, bisa download.', link: '#', badge: '🔥 HOT', terjual: 1205, stok: 50 },
                 { id: 'prod_3', nama: 'Canva Pro Edu 1 Tahun', kategori: 'App Premium', harga: 15000, hargaCoret: 45000, gambar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Canva_icon_2021.svg/1200px-Canva_icon_2021.svg.png,https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Canva_icon_2021.svg/1200px-Canva_icon_2021.svg.png', deskripsi: 'Akses semua fitur pro canva, garansi 1 tahun penuh.', link: '#', batasPromo: '2026-12-31T23:59', terjual: 85, stok: 15 },
@@ -1571,27 +1574,49 @@
                     .then(response => response.json())
                     .then(res => {
                         if (res.status === 'success') {
-                            localStorage.setItem('kama_creative_cache', JSON.stringify(res.data));
-                            
                             if (res.data.categories && res.data.categories.length > 0) mockCategories = res.data.categories;
                             if (res.data.products && res.data.products.length > 0) {
                                 mockProducts = res.data.products.map(function(p) {
                                     var hUtama = parseNumeric(p.harga);
                                     var hCoret = parseNumeric(p.hargaCoret);
                                     
-                                    // Cari produk awal untuk mempertahankan hargaCoret jika di Spreadsheet belum terisi
-                                    var existing = mockProducts.find(function(d) { return d.id === p.id || d.nama === p.nama; }) 
-                                                || defaultProducts.find(function(d) { return d.id === p.id || d.nama === p.nama; });
+                                    // 1. Penyesuaian skala puluhan ke ribuan (misal 50 -> 50000)
+                                    if (hCoret > 0 && hCoret < 1000 && hUtama >= 1000) {
+                                        hCoret = hCoret * 1000;
+                                        p.hargaCoret = hCoret;
+                                    }
+                                    
+                                    // 2. Cari data awal untuk mempertahankan hargaCoret jika di Spreadsheet 0/kosong
+                                    var pNamaLower = String(p.nama).toLowerCase().trim();
+                                    var existing = mockProducts.find(function(d) { return String(d.nama).toLowerCase().trim() === pNamaLower; }) 
+                                                || defaultProducts.find(function(d) { return String(d.nama).toLowerCase().trim() === pNamaLower; });
                                                 
                                     if (existing && (!hCoret || hCoret <= hUtama)) {
                                         var existingHargaCoret = parseNumeric(existing.hargaCoret);
+                                        if (existingHargaCoret < 1000 && hUtama >= 1000) existingHargaCoret *= 1000;
                                         if (existingHargaCoret > hUtama) {
                                             p.hargaCoret = existingHargaCoret;
                                         }
                                     }
+                                    
+                                    // 3. Fallback Spesifik Produk Photo Selection & Create Invoice
+                                    if (pNamaLower.includes('photo selection') && (!parseNumeric(p.hargaCoret) || parseNumeric(p.hargaCoret) <= parseNumeric(p.harga))) {
+                                        p.hargaCoret = 50000;
+                                    }
+                                    if (pNamaLower.includes('create invoice') && (!parseNumeric(p.hargaCoret) || parseNumeric(p.hargaCoret) <= parseNumeric(p.harga))) {
+                                        p.hargaCoret = 150000;
+                                    }
+
                                     return p;
                                 });
                             }
+                            if (res.data.testimonials && res.data.testimonials.length > 0) mockTestimonials = res.data.testimonials;
+                            
+                            localStorage.setItem('kama_creative_cache', JSON.stringify({
+                                categories: mockCategories,
+                                products: mockProducts,
+                                testimonials: mockTestimonials
+                            }));
                             if (res.data.testimonials && res.data.testimonials.length > 0) mockTestimonials = res.data.testimonials;
                             
                             renderPublicCategories();
