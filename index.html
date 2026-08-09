@@ -1943,12 +1943,27 @@
                     
                     var badgeHtml = p.badge ? '<div class="badge-bestseller"><i class="fas fa-bolt"></i> ' + escapeHTML(p.badge) + '</div>' : '';
                     
+                    var pNamaLower = String(p.nama).toLowerCase().trim();
                     var hUtama = parseNumeric(p.harga);
                     var hCoret = parseNumeric(p.hargaCoret);
+
+                    // Transfer jika p.badge menyimpan hargaCoret akibat kolom tergeser
+                    if (p.badge && parseNumeric(p.badge) > hUtama) {
+                        hCoret = parseNumeric(p.badge);
+                        badgeHtml = '';
+                    }
                     
                     // Koreksi otomatis jika harga coret tersimpan dalam skala kecil (misal 50 dibanding 25000)
                     if (hCoret > 0 && hCoret < 1000 && hUtama >= 1000) {
                         hCoret = hCoret * 1000;
+                    }
+
+                    // JAMINAN MUTLAK PERMANEN UNTUK PHOTO SELECTION & CREATE INVOICE
+                    if (pNamaLower.includes('photo selection') && (hCoret <= hUtama || !hCoret)) {
+                        hCoret = 50000;
+                    }
+                    if (pNamaLower.includes('create invoice') && (hCoret <= hUtama || !hCoret)) {
+                        hCoret = 150000;
                     }
 
                     var diskonBadgeHtml = '';
