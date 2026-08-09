@@ -1574,7 +1574,24 @@
                             localStorage.setItem('kama_creative_cache', JSON.stringify(res.data));
                             
                             if (res.data.categories && res.data.categories.length > 0) mockCategories = res.data.categories;
-                            if (res.data.products && res.data.products.length > 0) mockProducts = res.data.products;
+                            if (res.data.products && res.data.products.length > 0) {
+                                mockProducts = res.data.products.map(function(p) {
+                                    var hUtama = parseNumeric(p.harga);
+                                    var hCoret = parseNumeric(p.hargaCoret);
+                                    
+                                    // Cari produk awal untuk mempertahankan hargaCoret jika di Spreadsheet belum terisi
+                                    var existing = mockProducts.find(function(d) { return d.id === p.id || d.nama === p.nama; }) 
+                                                || defaultProducts.find(function(d) { return d.id === p.id || d.nama === p.nama; });
+                                                
+                                    if (existing && (!hCoret || hCoret <= hUtama)) {
+                                        var existingHargaCoret = parseNumeric(existing.hargaCoret);
+                                        if (existingHargaCoret > hUtama) {
+                                            p.hargaCoret = existingHargaCoret;
+                                        }
+                                    }
+                                    return p;
+                                });
+                            }
                             if (res.data.testimonials && res.data.testimonials.length > 0) mockTestimonials = res.data.testimonials;
                             
                             renderPublicCategories();
@@ -1645,24 +1662,20 @@
                     if (cached) {
                         try {
                             var parsed = JSON.parse(cached);
-                            if (parsed.categories) mockCategories = parsed.categories;
-                            if (parsed.products) mockProducts = parsed.products;
-                            if (parsed.testimonials) mockTestimonials = parsed.testimonials;
-                            renderPublicCategories();
-                            renderPublicProducts();
-                            renderPublicTestimonials();
+                            if (parsed.categories && parsed.categories.length > 0) mockCategories = parsed.categories;
+                            if (parsed.products && parsed.products.length > 0) mockProducts = parsed.parsedProducts || parsed.products;
+                            if (parsed.testimonials && parsed.testimonials.length > 0) mockTestimonials = parsed.testimonials;
                         } catch(e) {}
                     } else {
-                        // Kosongkan mock data agar tidak flash jika belum ada cache
-                        mockCategories = [];
-                        mockProducts = [];
-                        mockTestimonials = [];
-                        
-                        // Tampilkan skeleton/loading sederhana di area produk
-                        document.getElementById('publicProductGrid').innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><div class="mt-3 text-muted">Memuat Data...</div></div>';
+                        mockCategories = [...defaultCategories];
+                        mockProducts = [...defaultProducts];
+                        mockTestimonials = [...defaultTestimonials];
                     }
-                    
-                    loadDataFromDatabase(true);
+
+                    renderPublicCategories();
+                    renderPublicProducts();
+                    renderPublicTestimonials();
+                    loadDataFromDatabase(false);
                 } else {
                     console.log('SCRIPT_URL belum dikonfigurasi. Menggunakan mock data.');
                     renderPublicCategories();
