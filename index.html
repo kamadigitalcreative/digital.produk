@@ -1815,6 +1815,13 @@
                 container.innerHTML = html;
             }
 
+            window.parseNumeric = function (val) {
+                if (val === null || val === undefined || val === '') return 0;
+                if (typeof val === 'number') return val;
+                var cleanStr = String(val).replace(/[^0-9]/g, '');
+                return parseInt(cleanStr, 10) || 0;
+            };
+
             window.handleImageError = function (imgEl, isThumbnail) {
                 if (!imgEl || imgEl.dataset.hasError) return;
                 imgEl.dataset.hasError = 'true';
@@ -1854,9 +1861,9 @@
                 if (sortSelect) {
                     var sortVal = sortSelect.value;
                     if (sortVal === 'murah') {
-                        filtered.sort(function(a, b) { return a.harga - b.harga; });
+                        filtered.sort(function(a, b) { return parseNumeric(a.harga) - parseNumeric(b.harga); });
                     } else if (sortVal === 'mahal') {
-                        filtered.sort(function(a, b) { return b.harga - a.harga; });
+                        filtered.sort(function(a, b) { return parseNumeric(b.harga) - parseNumeric(a.harga); });
                     }
                 }
 
@@ -1873,9 +1880,12 @@
                     
                     var badgeHtml = p.badge ? '<div class="badge-bestseller"><i class="fas fa-bolt"></i> ' + escapeHTML(p.badge) + '</div>' : '';
                     
+                    var hUtama = parseNumeric(p.harga);
+                    var hCoret = parseNumeric(p.hargaCoret);
                     var diskonBadgeHtml = '';
-                    if (p.hargaCoret && p.hargaCoret > p.harga) {
-                        var diskonPercent = Math.round(((p.hargaCoret - p.harga) / p.hargaCoret) * 100);
+
+                    if (hCoret > hUtama && hUtama > 0) {
+                        var diskonPercent = Math.round(((hCoret - hUtama) / hCoret) * 100);
                         if (diskonPercent > 0) {
                             diskonBadgeHtml = '<div class="badge-diskon">-' + diskonPercent + '%</div>';
                         }
@@ -2320,10 +2330,10 @@
                     id: id,
                     nama: document.getElementById('prodNama').value,
                     kategori: document.getElementById('prodKategori').value,
-                    harga: parseInt(document.getElementById('prodHarga').value) || 0,
-                    hargaCoret: parseInt(document.getElementById('prodHargaCoret').value) || 0,
-                    terjual: parseInt(document.getElementById('prodTerjual').value) || 0,
-                    stok: parseInt(document.getElementById('prodStok').value) || 0,
+                    harga: parseNumeric(document.getElementById('prodHarga').value),
+                    hargaCoret: parseNumeric(document.getElementById('prodHargaCoret').value),
+                    terjual: parseNumeric(document.getElementById('prodTerjual').value),
+                    stok: parseNumeric(document.getElementById('prodStok').value),
                     batasPromo: document.getElementById('prodBatasPromo').value,
                     gambar: uploadedUrls.join(','),
                     deskripsi: document.getElementById('prodDeskripsi').value,
