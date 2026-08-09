@@ -1830,9 +1830,34 @@
 
             window.parseNumeric = function (val) {
                 if (val === null || val === undefined || val === '') return 0;
-                if (typeof val === 'number') return val;
-                var cleanStr = String(val).replace(/[^0-9]/g, '');
-                return parseInt(cleanStr, 10) || 0;
+                if (typeof val === 'number') return Math.round(val);
+                
+                var str = String(val).trim();
+                if (!str) return 0;
+                
+                str = str.replace(/[^0-9.,]/g, '');
+                if (!str) return 0;
+
+                if (str.includes('.') && str.includes(',')) {
+                    if (str.lastIndexOf(',') > str.lastIndexOf('.')) {
+                        str = str.replace(/\./g, '').replace(',', '.');
+                    } else {
+                        str = str.replace(/,/g, '');
+                    }
+                } else if (str.includes('.')) {
+                    var parts = str.split('.');
+                    if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
+                        str = str.replace(/\./g, '');
+                    }
+                } else if (str.includes(',')) {
+                    var parts = str.split(',');
+                    if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
+                        str = str.replace(/,/g, '');
+                    }
+                }
+
+                var num = parseFloat(str);
+                return isNaN(num) ? 0 : Math.round(num);
             };
 
             window.handleImageError = function (imgEl, isThumbnail) {
@@ -1895,8 +1920,13 @@
                     
                     var hUtama = parseNumeric(p.harga);
                     var hCoret = parseNumeric(p.hargaCoret);
-                    var diskonBadgeHtml = '';
+                    
+                    // Koreksi otomatis jika harga coret tersimpan dalam skala kecil (misal 50 dibanding 25000)
+                    if (hCoret > 0 && hCoret < 1000 && hUtama >= 1000) {
+                        hCoret = hCoret * 1000;
+                    }
 
+                    var diskonBadgeHtml = '';
                     if (hCoret > hUtama && hUtama > 0) {
                         var diskonPercent = Math.round(((hCoret - hUtama) / hCoret) * 100);
                         if (diskonPercent > 0) {
@@ -1922,8 +1952,8 @@
                   <div class="product-category"><i class="fas fa-layer-group"></i> ${escapeHTML(p.kategori)}</div>
                   <h5 class="product-title" onclick="openPublicDetail('${p.id}')" style="cursor:pointer;" title="${escapeHTML(p.nama)}">${escapeHTML(p.nama)}</h5>
                   <div class="product-price-wrapper">
-                    ${p.hargaCoret > 0 ? '<span class="product-price-coret">' + formatRupiah(p.hargaCoret) + '</span>' : ''}
-                    <div class="product-price">${formatRupiah(p.harga)}</div>
+                    ${hCoret > hUtama ? '<span class="product-price-coret">' + formatRupiah(hCoret) + '</span>' : ''}
+                    <div class="product-price">${formatRupiah(hUtama)}</div>
                   </div>
                   
                   <div class="product-sold">
