@@ -1495,9 +1495,9 @@
                                 <textarea class="form-control" id="prodDeskripsi" rows="3" required></textarea>
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label">Link Pembelian / WhatsApp</label>
-                                <input type="url" class="form-control" id="prodLink" placeholder="https://wa.me/..."
-                                    required>
+                                <label class="form-label">Link Pembayaran (Mayar.id / Custom URL)</label>
+                                <input type="text" class="form-control" id="prodLink" placeholder="https://mayar.id/pay/nama-produk (Kosongkan untuk checkout Mayar otomatis)">
+                                <small class="text-muted">Jika dikosongkan, pembeli akan otomatis diarahkan ke checkout Mayar.id sesuai harga produk.</small>
                             </div>
                         </div>
                     </div>
@@ -1815,6 +1815,31 @@
                 container.innerHTML = html;
             }
 
+            window.handleImageError = function (imgEl, isThumbnail) {
+                if (!imgEl || imgEl.dataset.hasError) return;
+                imgEl.dataset.hasError = 'true';
+                if (isThumbnail) {
+                    imgEl.parentElement.innerHTML = '<div style="width:40px;height:40px;background:#e9ecef;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#adb5bd;"><i class="fas fa-image"></i></div>';
+                } else {
+                    imgEl.parentElement.innerHTML = '<div class="product-img" style="display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#94a3b8;"><i class="fas fa-box"></i></div>';
+                }
+            };
+
+            window.formatImageUrl = function (url) {
+                if (!url) return '';
+                url = String(url).trim();
+                if (url.includes(',')) url = url.split(',')[0].trim();
+                if (!url || url === '#' || url === 'undefined' || url === 'null') return '';
+
+                // Extract Google Drive File ID from various share/view URL formats
+                var driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                if (driveMatch && driveMatch[1]) {
+                    return 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                }
+
+                return url;
+            };
+
             function renderPublicProducts() {
                 var container = document.getElementById('publicProductGrid');
                 var html = '';
@@ -1841,11 +1866,11 @@
                 }
 
                 filtered.forEach(function (p) {
-                    var coverImg = '';
-                    if (p.gambar) {
-                        coverImg = p.gambar.split(',')[0];
-                    }
-                    var imgHtml = coverImg ? '<img src="' + escapeHTML(coverImg) + '" class="product-img" alt="Product">' : '<div class="product-img" style="display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#94a3b8;"><i class="fas fa-box"></i></div>';
+                    var formattedUrl = formatImageUrl(p.gambar);
+                    var imgHtml = formattedUrl 
+                        ? '<img src="' + escapeHTML(formattedUrl) + '" class="product-img" alt="' + escapeHTML(p.nama) + '" onerror="handleImageError(this, false)">' 
+                        : '<div class="product-img" style="display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#94a3b8;"><i class="fas fa-box"></i></div>';
+                    
                     var badgeHtml = p.badge ? '<div class="badge-bestseller"><i class="fas fa-bolt"></i> ' + escapeHTML(p.badge) + '</div>' : '';
                     
                     var diskonBadgeHtml = '';
@@ -1912,7 +1937,24 @@
                     p.terjual = (p.terjual || 0) + 1;
                     if(p.stok && p.stok > 0) p.stok -= 1;
                     renderPublicProducts(); // re-render to show updated sold/stok
-                    window.open(p.link, '_blank');
+                    
+                    var paymentUrl = '';
+                    var rawLink = (p.link || '').trim();
+                    
+                    // 1. Jika link diisi URL Mayar spesifik
+                    if (rawLink && (rawLink.includes('mayar.id') || rawLink.includes('mayar.link'))) {
+                        paymentUrl = rawLink;
+                    }
+                    // 2. Jika link diisi URL HTTP lain
+                    else if (rawLink && rawLink !== '#' && rawLink.startsWith('http')) {
+                        paymentUrl = rawLink;
+                    }
+                    // 3. Default: Arahkan ke Mayar.id checkout dengan nama produk & harga otomatis
+                    else {
+                        paymentUrl = 'https://mayar.id/pay/checkout?product=' + encodeURIComponent(p.nama) + '&amount=' + p.harga;
+                    }
+                    
+                    window.open(paymentUrl, '_blank');
                 }
             };
 
@@ -1953,9 +1995,10 @@
                     var urls = p.gambar.split(',');
                     urls.forEach(function(url, idx) {
                         var activeClass = idx === 0 ? 'active' : '';
+                        var formatted = formatImageUrl(url);
                         carouselInner.innerHTML += `
                             <div class="carousel-item ${activeClass}">
-                                <img src="${escapeHTML(url)}" class="d-block w-100" style="aspect-ratio: 16/9; object-fit: contain; background: #f8fafc;" alt="Slide ${idx+1}">
+                                <img src="${escapeHTML(formatted)}" class="d-block w-100" style="aspect-ratio: 16/9; object-fit: contain; background: #f8fafc;" alt="Slide ${idx+1}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'d-flex align-items-center justify-content-center bg-light\\' style=\\'aspect-ratio: 16/9;\\'><i class=\\'fas fa-image fa-4x text-muted\\'></i></div>';">
                             </div>
                         `;
                     });
@@ -2169,11 +2212,12 @@
                         var preview = document.getElementById('uploadPreview');
                         if (p.gambar) {
                             p.gambar.split(',').forEach(function(url) {
-                                preview.innerHTML += '<img src="' + escapeHTML(url) + '" style="width:60px;height:60px;object-fit:cover;border-radius:5px;border:1px solid #ccc;">';
+                                var formatted = formatImageUrl(url);
+                                preview.innerHTML += '<img src="' + escapeHTML(formatted) + '" style="width:60px;height:60px;object-fit:cover;border-radius:5px;border:1px solid #ccc;" onerror="this.onerror=null; this.src=\'https://via.placeholder.com/60\';">';
                             });
                         }
                         document.getElementById('prodDeskripsi').value = p.deskripsi;
-                        document.getElementById('prodLink').value = p.link;
+                        document.getElementById('prodLink').value = p.link || '';
                         document.getElementById('modalProdukTitle').innerText = 'Edit Produk';
                     }
                 }
@@ -2187,7 +2231,8 @@
                     html = '<tr><td colspan="5" class="text-center text-muted">Belum ada produk.</td></tr>';
                 } else {
                     mockProducts.forEach(function (p) {
-                        var img = p.gambar ? '<img src="' + escapeHTML(p.gambar) + '" width="40" height="40" style="object-fit:cover; border-radius:5px;">' : '<div style="width:40px;height:40px;background:#e9ecef;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#adb5bd;"><i class="fas fa-image"></i></div>';
+                        var formattedImg = formatImageUrl(p.gambar);
+                        var img = formattedImg ? '<img src="' + escapeHTML(formattedImg) + '" width="40" height="40" style="object-fit:cover; border-radius:5px;" onerror="handleImageError(this, true)">' : '<div style="width:40px;height:40px;background:#e9ecef;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#adb5bd;"><i class="fas fa-image"></i></div>';
                         html += '<tr>';
                         html += '<td>' + img + '</td>';
                         html += '<td><strong>' + escapeHTML(p.nama) + '</strong><br><small class="text-muted text-truncate d-inline-block" style="max-width:200px;">' + escapeHTML(p.deskripsi) + '</small></td>';
