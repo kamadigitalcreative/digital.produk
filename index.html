@@ -1167,51 +1167,75 @@
         </div>
     </section>
 
-    <!-- ================= LOGIN PAGE ================= -->
+    <!-- ================= AUTH PAGE (LOGIN & REGISTER) ================= -->
     <section id="loginPage" class="auth-page d-none">
         <div class="auth-card">
-            <div class="text-center mb-4">
+            <div class="text-center mb-3">
                 <h3 class="font-weight-bold text-primary"><i class="fas fa-store"></i> Kama Creative</h3>
-                <p class="text-muted">Login untuk mengelola produk</p>
+                <p class="text-muted small mb-0" id="authSubTitle">Portal Akun Admin & Sales</p>
             </div>
+
+            <!-- Auth Nav Tabs -->
+            <ul class="nav nav-pills nav-justified mb-4 bg-light p-1 rounded-pill">
+                <li class="nav-item">
+                    <button class="nav-link active border-0 rounded-pill py-2 w-100 fw-bold small" id="tabLoginBtn" onclick="switchAuthTab('login')">Masuk</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link border-0 rounded-pill py-2 w-100 fw-bold small text-dark" id="tabRegisterBtn" onclick="switchAuthTab('register')">Daftar Admin Sales</button>
+                </li>
+            </ul>
+
+            <!-- Form 1: Login -->
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input type="text" class="form-control" id="loginUsername" required autocomplete="username">
+                    <label class="form-label small fw-bold">Username</label>
+                    <input type="text" class="form-control form-control-modern" id="loginUsername" required autocomplete="username" placeholder="Masukkan username">
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-control" id="loginPassword" required
-                        autocomplete="current-password">
-                    <div class="form-text">Hint: admin / bismillah</div>
+                    <label class="form-label small fw-bold">Password</label>
+                    <input type="password" class="form-control form-control-modern" id="loginPassword" required autocomplete="current-password" placeholder="Masukkan password">
                 </div>
-                <button type="submit" class="btn btn-primary w-100" id="btnLogin">Masuk</button>
-                <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none"
-                    onclick="goBackToLanding()">Kembali ke Toko</button>
+                <button type="submit" class="btn btn-primary w-100 py-2 rounded-pill fw-bold" id="btnLogin">Masuk</button>
+                <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none text-muted small" onclick="goBackToLanding()"><i class="fas fa-arrow-left me-1"></i> Kembali ke Toko</button>
+            </form>
+
+            <!-- Form 2: Pendaftaran Mandiri Admin Sales -->
+            <form id="registerForm" class="d-none" onsubmit="handleRegisterAdmin(event)">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Nama Lengkap</label>
+                    <input type="text" class="form-control form-control-modern" id="regNama" required placeholder="Contoh: Budi Santoso">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Username Login</label>
+                    <input type="text" class="form-control form-control-modern" id="regUsername" required placeholder="budi123">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Password</label>
+                    <input type="password" class="form-control form-control-modern" id="regPassword" required placeholder="••••••••">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-bold">Kode Referal Unik Pilihan Anda</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light fw-bold text-primary">?ref=</span>
+                        <input type="text" class="form-control form-control-modern text-uppercase fw-bold" id="regRefCode" required placeholder="BUDI123">
+                    </div>
+                    <div class="form-text text-muted" style="font-size:0.75rem;">Kode ini akan digunakan untuk melacak pembeli dari link Anda.</div>
+                </div>
+                <button type="submit" class="btn btn-success w-100 py-2 rounded-pill fw-bold" id="btnRegister">Daftar Admin Sales</button>
+                <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none text-muted small" onclick="goBackToLanding()"><i class="fas fa-arrow-left me-1"></i> Kembali ke Toko</button>
             </form>
         </div>
     </section>
 
-    <!-- ================= MAIN APP (ADMIN) ================= -->
+    <!-- ================= MAIN APP (ADMIN & OWNER) ================= -->
     <section id="mainApp" class="app-shell d-none">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-brand">
                 <i class="fas fa-store text-primary"></i> Kama Creative
             </div>
-            <div class="mt-3">
-                <a class="nav-item-custom active" onclick="showPage('dashboard', this)">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-                <a class="nav-item-custom" onclick="showPage('kategori', this)">
-                    <i class="fas fa-tags"></i> Kategori Produk
-                </a>
-                <a class="nav-item-custom" onclick="showPage('produk', this)">
-                    <i class="fas fa-box"></i> Kelola Produk
-                </a>
-                <a class="nav-item-custom" onclick="showPage('testimoni', this)">
-                    <i class="fas fa-comment-dots"></i> Kelola Testimoni
-                </a>
+            <div class="mt-3" id="sidebarMenu">
+                <!-- Rendered dynamically by JS based on Role -->
             </div>
             <div class="mt-auto mb-3">
                 <a class="nav-item-custom text-danger" onclick="logout()">
@@ -1233,56 +1257,61 @@
                             class="fas fa-external-link-alt"></i> Lihat Toko</button>
                 </div>
                 <div class="d-flex align-items-center">
-                    <span class="me-2 text-muted">Halo, <span id="displayUser">Admin</span></span>
-                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                        style="width: 35px; height: 35px;">A</div>
+                    <span class="me-2 text-muted"><span id="displayUser">Admin</span></span>
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
+                        style="width: 35px; height: 35px;" id="userAvatarIcon">A</div>
                 </div>
             </header>
 
-            <!-- Page: Dashboard -->
-            <div id="page-dashboard" class="app-page">
-                <h4 class="mb-4">Dashboard</h4>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card-dashboard">
-                            <h3 id="dashTotalProduk">0</h3>
-                            <div class="text-muted">Total Produk</div>
+            <!-- Page 1: Dashboard Owner -->
+            <div id="page-dashboard-owner" class="app-page">
+                <h4 class="mb-4 fw-bold"><i class="fas fa-crown text-warning me-2"></i> Dashboard Owner</h4>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-dashboard border-0 shadow-sm" style="background: linear-gradient(135deg, #4f46e5, #6366f1); color:#fff;">
+                            <h3 id="ownerTotalOmset" class="text-white fw-bold">Rp 0</h3>
+                            <div class="small opacity-75 fw-semibold">Total Omset Toko</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card-dashboard">
-                            <h3 id="dashTotalKategori">0</h3>
-                            <div class="text-muted">Total Kategori</div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-dashboard border-0 shadow-sm" style="background: linear-gradient(135deg, #059669, #10b981); color:#fff;">
+                            <h3 id="ownerTotalKomisi" class="text-white fw-bold">Rp 0</h3>
+                            <div class="small opacity-75 fw-semibold">Total Komisi Payable</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card-dashboard">
-                            <h3 id="dashTotalTestimoni">0</h3>
-                            <div class="text-muted">Total Testimoni</div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-dashboard border-0 shadow-sm" style="background: linear-gradient(135deg, #d97706, #f59e0b); color:#fff;">
+                            <h3 id="ownerTotalAdmin" class="text-white fw-bold">0</h3>
+                            <div class="small opacity-75 fw-semibold">Total Admin Sales</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-dashboard border-0 shadow-sm" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color:#fff;">
+                            <h3 id="ownerTotalTerjual" class="text-white fw-bold">0</h3>
+                            <div class="small opacity-75 fw-semibold">Total Produk Terjual</div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Page: Kategori -->
-            <div id="page-kategori" class="app-page d-none">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4>Kategori Produk</h4>
-                    <button class="btn btn-primary" onclick="openKategoriModal()"><i class="fas fa-plus"></i> Tambah
-                        Kategori</button>
-                </div>
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0"><i class="fas fa-users-cog text-primary me-2"></i> Performa Ringkas Admin Sales</h5>
+                        <button class="btn btn-primary btn-sm rounded-pill" onclick="showPage('manage-admins')">Kelola Admin Sales <i class="fas fa-arrow-right ms-1"></i></button>
+                    </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
+                            <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Nama Kategori</th>
-                                        <th class="text-end">Aksi</th>
+                                        <th>Nama Admin</th>
+                                        <th>Kode Referal</th>
+                                        <th>Komisi (%)</th>
+                                        <th>Customer</th>
+                                        <th>Total Omset</th>
+                                        <th>Komisi (Rp)</th>
                                     </tr>
                                 </thead>
-                                <tbody id="kategoriTableBody">
+                                <tbody id="ownerSummaryAdminTable">
                                     <!-- Rendered by JS -->
                                 </tbody>
                             </table>
@@ -1291,27 +1320,65 @@
                 </div>
             </div>
 
-            <!-- Page: Produk -->
-            <div id="page-produk" class="app-page d-none">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4>Kelola Produk</h4>
-                    <button class="btn btn-primary" onclick="openProdukModal()"><i class="fas fa-plus"></i> Tambah
-                        Produk</button>
+            <!-- Page 2: Kelola Admin Sales & Komisi (%) - KHUSUS OWNER -->
+            <div id="page-manage-admins" class="app-page d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold mb-1"><i class="fas fa-users-cog text-primary me-2"></i> Kelola Admin Sales & Komisi (%)</h4>
+                        <p class="text-muted small mb-0">Atur persentase komisi (%) dan lihat statistik pembeli per admin</p>
+                    </div>
                 </div>
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
+                            <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Gambar</th>
-                                        <th>Nama Produk</th>
-                                        <th>Kategori</th>
+                                        <th>Admin Sales</th>
+                                        <th>Kode Referal</th>
+                                        <th>Link Referal</th>
+                                        <th>Komisi (%)</th>
+                                        <th>Customer</th>
+                                        <th>Total Omset</th>
+                                        <th>Total Komisi (Rp)</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manageAdminsTableBody">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3: Laporan Penjualan Toko - KHUSUS OWNER -->
+            <div id="page-sales-reports" class="app-page d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold mb-1"><i class="fas fa-receipt text-primary me-2"></i> Laporan Detail Penjualan Toko</h4>
+                        <p class="text-muted small mb-0">Riwayat transaksi lengkap pembeli dari seluruh link admin sales</p>
+                    </div>
+                </div>
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID Transaksi</th>
+                                        <th>Tanggal</th>
+                                        <th>Admin Sales</th>
+                                        <th>Kode Referal</th>
+                                        <th>Produk</th>
                                         <th>Harga</th>
-                                        <th class="text-end">Aksi</th>
+                                        <th>Total Omset</th>
+                                        <th>Komisi (%)</th>
+                                        <th>Nominal Komisi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="produkTableBody">
+                                <tbody id="allSalesReportsTableBody">
                                     <!-- Rendered by JS -->
                                 </tbody>
                             </table>
@@ -1320,30 +1387,113 @@
                 </div>
             </div>
 
-            <!-- Page: Testimoni -->
-            <div id="page-testimoni" class="app-page d-none">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4>Kelola Testimoni</h4>
-                    <button class="btn btn-primary" onclick="openTestimoniModal()"><i class="fas fa-plus"></i> Tambah
-                        Testimoni</button>
+            <!-- Page 4: Dashboard Khusus Admin Sales -->
+            <div id="page-dashboard-admin" class="app-page d-none">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="p-4 rounded-4 shadow-sm position-relative overflow-hidden" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); color:#fff;">
+                            <h4 class="fw-bold mb-2">Selamat Datang, <span id="adminSalesName">Admin</span>! 👋</h4>
+                            <p class="mb-3 opacity-90 small">Gunakan link referal khusus Anda di bawah ini untuk dibagikan ke calon pembeli. Setiap pembelian produk dari link Anda akan menghasilkan komisi!</p>
+                            
+                            <div class="bg-white p-2 rounded-3 d-flex align-items-center justify-content-between flex-wrap gap-2 max-w-100">
+                                <div class="d-flex align-items-center gap-2 px-2 overflow-hidden">
+                                    <i class="fas fa-link text-primary"></i>
+                                    <span id="adminRefLinkText" class="text-dark fw-bold small text-truncate">https://store.kamacreative.my.id/?ref=KODE</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm rounded-pill fw-bold px-3" id="btnCopyAdminRef" onclick="copyMyReferralLink()">
+                                    <i class="fas fa-copy me-1"></i> Copy Link Referal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card border-0 shadow-sm">
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-dashboard">
+                            <h3 id="myTotalCustomer" class="text-primary">0</h3>
+                            <div class="text-muted small">Total Customer Pembeli</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-dashboard">
+                            <h3 id="myTotalTerjual" class="text-info">0</h3>
+                            <div class="text-muted small">Produk Terjual</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-dashboard">
+                            <h3 id="myTotalOmset" class="text-secondary">Rp 0</h3>
+                            <div class="text-muted small">Total Omset Penjualan</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card-dashboard border-success">
+                            <h3 id="myTotalKomisi" class="text-success">Rp 0</h3>
+                            <div class="text-muted small fw-bold">Total Komisi Diterima (<span id="myCommissionRate">10</span>%)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-header bg-white py-3 border-0">
+                        <h5 class="fw-bold mb-0"><i class="fas fa-shopping-bag text-primary me-2"></i> Riwayat Pembeli dari Link Anda</h5>
+                    </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
+                            <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Avatar</th>
-                                        <th>Nama & Peran</th>
-                                        <th>Isi Testimoni</th>
-                                        <th class="text-end">Aksi</th>
+                                        <th>Tanggal</th>
+                                        <th>Nama Produk</th>
+                                        <th>Harga Produk</th>
+                                        <th>Total Omset</th>
+                                        <th>Komisi (%)</th>
+                                        <th>Komisi Diterima (Rp)</th>
                                     </tr>
                                 </thead>
-                                <tbody id="testimoniTableBody">
+                                <tbody id="mySalesTableBody">
                                     <!-- Rendered by JS -->
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Edit Komisi % (Khusus Owner) -->
+            <div class="modal fade" id="modalEditCommission" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
+                        <form id="formEditCommission" onsubmit="saveAdminCommission(event)">
+                            <div class="modal-header border-0 bg-light">
+                                <h5 class="modal-title fw-bold">Atur Persentase Komisi Admin</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <input type="hidden" id="editAdminId">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Nama Admin</label>
+                                    <input type="text" class="form-control bg-light" id="editAdminNama" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Kode Referal</label>
+                                    <input type="text" class="form-control bg-light text-uppercase fw-bold text-primary" id="editAdminRef" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-primary">Persentase Komisi (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control form-control-lg fw-bold" id="editAdminPercent" min="0" max="100" step="0.5" required placeholder="10">
+                                        <span class="input-group-text fw-bold">%</span>
+                                    </div>
+                                    <div class="form-text text-muted">Komisi dihitung otomatis dari total omset harga produk yang dijual admin ini.</div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary rounded-pill px-4" id="btnSaveCommission">Simpan Komisi</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -1592,6 +1742,24 @@
             var mockCategories = [...defaultCategories];
             var mockProducts = [...defaultProducts];
             var mockTestimonials = [...defaultTestimonials];
+            var mockAdmins = [
+                { id: 'ADM1', username: 'admin', nama: 'Owner Kama', refCode: 'OWNER', komisiPercent: 0, role: 'Owner' },
+                { id: 'ADM2', username: 'budi', nama: 'Budi Santoso', refCode: 'BUDI123', komisiPercent: 10, role: 'Admin' }
+            ];
+            var mockSales = [];
+
+            // Deteksi parameter URL Kode Referal (?ref=BUDI123)
+            (function detectReferralCode() {
+                try {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var ref = urlParams.get('ref') || urlParams.get('admin');
+                    if (ref) {
+                        ref = ref.trim().toUpperCase();
+                        localStorage.setItem('kama_ref_code', ref);
+                        console.log('⚡ Kode referal terdeteksi:', ref);
+                    }
+                } catch (e) { }
+            })();
 
             function loadDataFromDatabase(showLoader = false) {
                 var cached = localStorage.getItem('kama_creative_cache');
@@ -1629,21 +1797,27 @@
                                 });
                             }
                             if (res.data.testimonials && res.data.testimonials.length > 0) mockTestimonials = res.data.testimonials;
+                            if (res.data.admins && res.data.admins.length > 0) mockAdmins = res.data.admins;
+                            if (res.data.sales && res.data.sales.length > 0) mockSales = res.data.sales;
 
                             localStorage.setItem('kama_creative_cache', JSON.stringify({
                                 categories: mockCategories,
                                 products: mockProducts,
-                                testimonials: mockTestimonials
+                                testimonials: mockTestimonials,
+                                admins: mockAdmins,
+                                sales: mockSales
                             }));
-                            if (res.data.testimonials && res.data.testimonials.length > 0) mockTestimonials = res.data.testimonials;
 
                             renderPublicCategories();
                             renderPublicProducts();
                             renderPublicTestimonials();
-                            if (activePage === 'dashboard') loadPageData('dashboard');
-                            if (activePage === 'kategori') renderKategoriTable();
-                            if (activePage === 'produk') renderProdukTable();
-                            if (activePage === 'testimoni') renderTestimoniTable();
+                            
+                            var user = Auth.getUser();
+                            if (activePage === 'dashboard-owner' || activePage === 'dashboard-admin') {
+                                showPage(user.role === 'Owner' ? 'dashboard-owner' : 'dashboard-admin');
+                            } else {
+                                loadPageData(activePage);
+                            }
                         } else {
                             console.error('Error fetching data:', res.message);
                         }
@@ -1664,11 +1838,28 @@
             var Auth = (function () {
                 var _verified = false, _token = null, _user = null;
                 return {
-                    login: function (token, user) { _token = token; _user = user; _verified = true; },
-                    isVerified: function () { return _verified === true && !!_token; },
+                    login: function (token, user) {
+                        _token = token;
+                        _user = user;
+                        _verified = true;
+                        localStorage.setItem('kama_user_session', JSON.stringify(user));
+                    },
+                    isVerified: function () {
+                        if (!_verified && localStorage.getItem('kama_user_session')) {
+                            try {
+                                _user = JSON.parse(localStorage.getItem('kama_user_session'));
+                                _token = 'token_' + _user.username;
+                                _verified = true;
+                            } catch (e) { }
+                        }
+                        return _verified === true && !!_token;
+                    },
                     getToken: function () { return _token; },
-                    getUser: function () { return _user; },
-                    clear: function () { _verified = false; _token = null; _user = null; }
+                    getUser: function () { return _user || {}; },
+                    clear: function () {
+                        _verified = false; _token = null; _user = null;
+                        localStorage.removeItem('kama_user_session');
+                    }
                 };
             })();
 
@@ -1753,19 +1944,64 @@
                 var loginPage = document.getElementById('loginPage');
                 var mainApp = document.getElementById('mainApp');
 
-                // If coming here directly, show landing page unless verified
                 if (Auth.isVerified()) {
                     landingPage.classList.add('d-none');
                     loginPage.classList.add('d-none');
                     mainApp.classList.remove('d-none');
-                    document.getElementById('displayUser').innerText = Auth.getUser().fullname;
-                    showPage('dashboard');
+
+                    var user = Auth.getUser();
+                    document.getElementById('displayUser').innerText = user.fullname + (user.role === 'Owner' ? ' (Owner)' : ' (Admin Sales)');
+                    var avatarIcon = document.getElementById('userAvatarIcon');
+                    if (avatarIcon) avatarIcon.innerText = (user.fullname || 'A').charAt(0).toUpperCase();
+
+                    renderSidebarMenu(user.role);
+
+                    if (user.role === 'Owner') {
+                        showPage('dashboard-owner');
+                    } else {
+                        showPage('dashboard-admin');
+                    }
                 } else {
-                    // Default to landing page if not verified
                     landingPage.classList.remove('d-none');
                     loginPage.classList.add('d-none');
                     mainApp.classList.add('d-none');
                 }
+            }
+
+            function renderSidebarMenu(role) {
+                var menuContainer = document.getElementById('sidebarMenu');
+                var html = '';
+
+                if (role === 'Owner') {
+                    html += `
+                        <a class="nav-item-custom active" onclick="showPage('dashboard-owner', this)">
+                            <i class="fas fa-crown text-warning"></i> Dashboard Owner
+                        </a>
+                        <a class="nav-item-custom" onclick="showPage('manage-admins', this)">
+                            <i class="fas fa-users-cog"></i> Kelola Admin & Komisi (%)
+                        </a>
+                        <a class="nav-item-custom" onclick="showPage('sales-reports', this)">
+                            <i class="fas fa-receipt"></i> Laporan Penjualan Toko
+                        </a>
+                        <a class="nav-item-custom" onclick="showPage('produk', this)">
+                            <i class="fas fa-box"></i> Kelola Produk
+                        </a>
+                        <a class="nav-item-custom" onclick="showPage('kategori', this)">
+                            <i class="fas fa-tags"></i> Kategori Produk
+                        </a>
+                        <a class="nav-item-custom" onclick="showPage('testimoni', this)">
+                            <i class="fas fa-comment-dots"></i> Kelola Testimoni
+                        </a>
+                    `;
+                } else {
+                    // Admin Sales
+                    html += `
+                        <a class="nav-item-custom active" onclick="showPage('dashboard-admin', this)">
+                            <i class="fas fa-user-chart"></i> Dashboard Penjualan Saya
+                        </a>
+                    `;
+                }
+                menuContainer.innerHTML = html;
             }
 
             window.showPage = function (pageName, navEl) {
@@ -1785,10 +2021,9 @@
                 });
                 if (navEl) navEl.classList.add('active');
                 else {
-                    // Find the nav element corresponding to the page
                     var navLinks = document.querySelectorAll('.nav-item-custom');
                     for (var i = 0; i < navLinks.length; i++) {
-                        if (navLinks[i].getAttribute('onclick').indexOf(pageName) > -1) {
+                        if (navLinks[i].getAttribute('onclick') && navLinks[i].getAttribute('onclick').indexOf(pageName) > -1) {
                             navLinks[i].classList.add('active');
                             break;
                         }
@@ -1799,11 +2034,66 @@
             };
 
             function loadPageData(pageName) {
-                if (pageName === 'dashboard') {
-                    document.getElementById('dashTotalProduk').innerText = mockProducts.length;
-                    document.getElementById('dashTotalKategori').innerText = mockCategories.length;
-                    var elTesti = document.getElementById('dashTotalTestimoni');
-                    if (elTesti) elTesti.innerText = mockTestimonials.length;
+                var user = Auth.getUser();
+
+                if (pageName === 'dashboard-owner') {
+                    var totalOmset = mockSales.reduce((acc, s) => acc + (s.totalOmset || 0), 0);
+                    var totalKomisi = mockSales.reduce((acc, s) => acc + (s.nominalKomisi || 0), 0);
+                    var totalTerjual = mockSales.reduce((acc, s) => acc + (s.jumlah || 1), 0);
+                    var adminSalesList = mockAdmins.filter(a => a.role === 'Admin');
+
+                    document.getElementById('ownerTotalOmset').innerText = formatRupiah(totalOmset);
+                    document.getElementById('ownerTotalKomisi').innerText = formatRupiah(totalKomisi);
+                    document.getElementById('ownerTotalAdmin').innerText = adminSalesList.length;
+                    document.getElementById('ownerTotalTerjual').innerText = totalTerjual;
+
+                    // Summary admin table
+                    var tbody = document.getElementById('ownerSummaryAdminTable');
+                    var html = '';
+                    if (adminSalesList.length === 0) {
+                        html = '<tr><td colspan="6" class="text-center text-muted py-3">Belum ada Admin Sales yang terdaftar.</td></tr>';
+                    } else {
+                        adminSalesList.forEach(function (adm) {
+                            var admSales = mockSales.filter(s => s.refCode === adm.refCode);
+                            var admOmset = admSales.reduce((acc, s) => acc + (s.totalOmset || 0), 0);
+                            var admKomisi = admSales.reduce((acc, s) => acc + (s.nominalKomisi || 0), 0);
+                            html += `
+                                <tr>
+                                    <td><strong>${escapeHTML(adm.nama)}</strong></td>
+                                    <td><span class="badge bg-primary text-uppercase">${escapeHTML(adm.refCode)}</span></td>
+                                    <td><span class="badge bg-success fs-6">${adm.komisiPercent}%</span></td>
+                                    <td>${admSales.length} Transaksi</td>
+                                    <td>${formatRupiah(admOmset)}</td>
+                                    <td><strong class="text-success">${formatRupiah(admKomisi)}</strong></td>
+                                </tr>
+                            `;
+                        });
+                    }
+                    if (tbody) tbody.innerHTML = html;
+
+                } else if (pageName === 'manage-admins') {
+                    renderManageAdminsTable();
+                } else if (pageName === 'sales-reports') {
+                    renderAllSalesReportsTable();
+                } else if (pageName === 'dashboard-admin') {
+                    var myRef = (user.refCode || '').toUpperCase();
+                    document.getElementById('adminSalesName').innerText = user.fullname;
+                    document.getElementById('myCommissionRate').innerText = user.komisiPercent || 10;
+
+                    var refUrl = window.location.origin + window.location.pathname + '?ref=' + myRef;
+                    document.getElementById('adminRefLinkText').innerText = refUrl;
+
+                    var mySales = mockSales.filter(s => s.refCode === myRef);
+                    var myOmset = mySales.reduce((acc, s) => acc + (s.totalOmset || 0), 0);
+                    var myKomisi = mySales.reduce((acc, s) => acc + (s.nominalKomisi || 0), 0);
+                    var myTerjual = mySales.reduce((acc, s) => acc + (s.jumlah || 1), 0);
+
+                    document.getElementById('myTotalCustomer').innerText = mySales.length;
+                    document.getElementById('myTotalTerjual').innerText = myTerjual;
+                    document.getElementById('myTotalOmset').innerText = formatRupiah(myOmset);
+                    document.getElementById('myTotalKomisi').innerText = formatRupiah(myKomisi);
+
+                    renderMySalesTable(mySales);
                 } else if (pageName === 'kategori') {
                     renderKategoriTable();
                 } else if (pageName === 'produk') {
@@ -1812,6 +2102,191 @@
                     renderTestimoniTable();
                 }
             }
+
+            function renderManageAdminsTable() {
+                var tbody = document.getElementById('manageAdminsTableBody');
+                var html = '';
+                var adminSalesList = mockAdmins.filter(a => a.role === 'Admin');
+
+                if (adminSalesList.length === 0) {
+                    html = '<tr><td colspan="8" class="text-center text-muted py-4">Belum ada Admin Sales terdaftar.</td></tr>';
+                } else {
+                    adminSalesList.forEach(function (adm) {
+                        var admSales = mockSales.filter(s => s.refCode === adm.refCode);
+                        var admOmset = admSales.reduce((acc, s) => acc + (s.totalOmset || 0), 0);
+                        var admKomisi = admSales.reduce((acc, s) => acc + (s.nominalKomisi || 0), 0);
+
+                        html += `
+                            <tr>
+                                <td><strong>${escapeHTML(adm.nama)}</strong><br><small class="text-muted">${escapeHTML(adm.username)}</small></td>
+                                <td><span class="badge bg-primary text-uppercase">${escapeHTML(adm.refCode)}</span></td>
+                                <td><button class="btn btn-sm btn-outline-secondary rounded-pill" onclick="copyReferralLink('${adm.refCode}')"><i class="fas fa-copy me-1"></i> Copy Link</button></td>
+                                <td><span class="badge bg-success fs-6">${adm.komisiPercent}%</span></td>
+                                <td>${admSales.length} Customer</td>
+                                <td>${formatRupiah(admOmset)}</td>
+                                <td><strong class="text-success">${formatRupiah(admKomisi)}</strong></td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-primary rounded-pill me-1" onclick="openEditCommissionModal('${adm.id}')" title="Atur % Komisi"><i class="fas fa-percentage"></i> Edit %</button>
+                                    <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="deleteAdminSales('${adm.id}')" title="Hapus Admin"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                if (tbody) tbody.innerHTML = html;
+            }
+
+            function renderAllSalesReportsTable() {
+                var tbody = document.getElementById('allSalesReportsTableBody');
+                var html = '';
+
+                if (mockSales.length === 0) {
+                    html = '<tr><td colspan="9" class="text-center text-muted py-4">Belum ada transaksi penjualan tercatat.</td></tr>';
+                } else {
+                    mockSales.forEach(function (s) {
+                        var tgl = s.tanggal ? new Date(s.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+                        html += `
+                            <tr>
+                                <td><code>${escapeHTML(s.id)}</code></td>
+                                <td><small>${tgl}</small></td>
+                                <td><strong>${escapeHTML(s.namaAdmin)}</strong></td>
+                                <td><span class="badge bg-secondary">${escapeHTML(s.refCode)}</span></td>
+                                <td>${escapeHTML(s.namaProduk)}</td>
+                                <td>${formatRupiah(s.harga)}</td>
+                                <td>${formatRupiah(s.totalOmset)}</td>
+                                <td><span class="badge bg-info text-dark">${s.komisiPercent}%</span></td>
+                                <td><strong class="text-success">${formatRupiah(s.nominalKomisi)}</strong></td>
+                            </tr>
+                        `;
+                    });
+                }
+                if (tbody) tbody.innerHTML = html;
+            }
+
+            function renderMySalesTable(mySales) {
+                var tbody = document.getElementById('mySalesTableBody');
+                var html = '';
+
+                if (mySales.length === 0) {
+                    html = '<tr><td colspan="6" class="text-center text-muted py-4">Belum ada pembeli dari link referal Anda.</td></tr>';
+                } else {
+                    mySales.forEach(function (s) {
+                        var tgl = s.tanggal ? new Date(s.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+                        html += `
+                            <tr>
+                                <td><small>${tgl}</small></td>
+                                <td><strong>${escapeHTML(s.namaProduk)}</strong></td>
+                                <td>${formatRupiah(s.harga)}</td>
+                                <td>${formatRupiah(s.totalOmset)}</td>
+                                <td><span class="badge bg-info text-dark">${s.komisiPercent}%</span></td>
+                                <td><strong class="text-success">${formatRupiah(s.nominalKomisi)}</strong></td>
+                            </tr>
+                        `;
+                    });
+                }
+                if (tbody) tbody.innerHTML = html;
+            }
+
+            window.copyMyReferralLink = function () {
+                var user = Auth.getUser();
+                if (user && user.refCode) {
+                    copyReferralLink(user.refCode);
+                }
+            };
+
+            window.copyReferralLink = function (refCode) {
+                var baseUrl = window.location.origin + window.location.pathname;
+                var refUrl = baseUrl + '?ref=' + refCode;
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(refUrl).then(function () {
+                        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Link Referal Berhasil Disalin!', showConfirmButton: false, timer: 2500 });
+                    });
+                } else {
+                    var textArea = document.createElement("textarea");
+                    textArea.value = refUrl;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Link Referal Berhasil Disalin!', showConfirmButton: false, timer: 2500 });
+                }
+            };
+
+            var modalEditCommissionObj;
+            window.openEditCommissionModal = function (id) {
+                if (!modalEditCommissionObj) modalEditCommissionObj = new bootstrap.Modal(document.getElementById('modalEditCommission'));
+                var admin = mockAdmins.find(x => x.id === id);
+                if (!admin) return;
+
+                document.getElementById('editAdminId').value = admin.id;
+                document.getElementById('editAdminNama').value = admin.nama;
+                document.getElementById('editAdminRef').value = admin.refCode;
+                document.getElementById('editAdminPercent').value = admin.komisiPercent || 10;
+
+                modalEditCommissionObj.show();
+            };
+
+            window.saveAdminCommission = function (e) {
+                e.preventDefault();
+                var id = document.getElementById('editAdminId').value;
+                var percent = Number(document.getElementById('editAdminPercent').value);
+                var btn = document.getElementById('btnSaveCommission');
+
+                btn.disabled = true;
+                btn.innerText = 'Menyimpan...';
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'updateAdminCommission', payload: { id: id, komisiPercent: percent } }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                })
+                .then(r => r.json())
+                .then(res => {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan Komisi';
+                    modalEditCommissionObj.hide();
+
+                    if (res.status === 'success') {
+                        Swal.fire('Sukses', 'Persentase komisi berhasil diperbarui', 'success');
+                        loadDataFromDatabase();
+                    } else {
+                        Swal.fire('Error', res.message, 'error');
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan Komisi';
+                    Swal.fire('Error', 'Gagal terhubung ke server', 'error');
+                });
+            };
+
+            window.deleteAdminSales = function (id) {
+                Swal.fire({
+                    title: 'Hapus Admin Sales?',
+                    text: 'Akun admin ini akan dihapus!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Hapus'
+                }).then(function (res) {
+                    if (res.isConfirmed) {
+                        fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'deleteAdmin', payload: { id: id } }),
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                        })
+                        .then(r => r.json())
+                        .then(res => {
+                            if (res.status === 'success') {
+                                Swal.fire('Sukses', 'Admin sales berhasil dihapus', 'success');
+                                loadDataFromDatabase();
+                            } else {
+                                Swal.fire('Error', res.message, 'error');
+                            }
+                        });
+                    }
+                });
+            };
 
             function renderPublicTestimonials() {
                 var section = document.getElementById('publicTestimonialSection');
@@ -2055,20 +2530,37 @@
                 if (p) {
                     p.terjual = (p.terjual || 0) + 1;
                     if (p.stok && p.stok > 0) p.stok -= 1;
-                    renderPublicProducts(); // re-render to show updated sold/stok
+                    renderPublicProducts();
+
+                    var refCode = localStorage.getItem('kama_ref_code') || 'DIRECT';
+
+                    // Track transaction on backend
+                    if (SCRIPT_URL && SCRIPT_URL !== 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI') {
+                        fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                action: 'trackSale',
+                                payload: {
+                                    refCode: refCode,
+                                    idProduk: p.id,
+                                    namaProduk: p.nama,
+                                    harga: parseNumeric(p.harga),
+                                    jumlah: 1
+                                }
+                            }),
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                        }).catch(function(e) { console.error('Track sale error:', e); });
+                    }
 
                     var paymentUrl = '';
                     var rawLink = (p.link || '').trim();
 
-                    // 1. Jika link diisi URL Mayar spesifik
                     if (rawLink && (rawLink.includes('mayar.id') || rawLink.includes('mayar.link'))) {
                         paymentUrl = rawLink;
                     }
-                    // 2. Jika link diisi URL HTTP lain
                     else if (rawLink && rawLink !== '#' && rawLink.startsWith('http')) {
                         paymentUrl = rawLink;
                     }
-                    // 3. Default: Arahkan ke Mayar.id checkout dengan nama produk & harga otomatis
                     else {
                         paymentUrl = 'https://mayar.id/pay/checkout?product=' + encodeURIComponent(p.nama) + '&amount=' + p.harga;
                     }
@@ -2168,7 +2660,81 @@
                 }
             });
 
-            // ================= LOGIN LOGIC =================
+            // ================= LOGIN & REGISTER LOGIC =================
+            window.switchAuthTab = function(type) {
+                var loginForm = document.getElementById('loginForm');
+                var regForm = document.getElementById('registerForm');
+                var tabLoginBtn = document.getElementById('tabLoginBtn');
+                var tabRegBtn = document.getElementById('tabRegisterBtn');
+                var subTitle = document.getElementById('authSubTitle');
+
+                if (type === 'register') {
+                    loginForm.classList.add('d-none');
+                    regForm.classList.remove('d-none');
+                    tabLoginBtn.classList.remove('active', 'text-white');
+                    tabLoginBtn.classList.add('text-dark');
+                    tabRegBtn.classList.add('active');
+                    subTitle.innerText = 'Form Pendaftaran Admin Sales Baru';
+                } else {
+                    regForm.classList.add('d-none');
+                    loginForm.classList.remove('d-none');
+                    tabRegBtn.classList.remove('active');
+                    tabRegBtn.classList.add('text-dark');
+                    tabLoginBtn.classList.add('active');
+                    subTitle.innerText = 'Portal Akun Admin & Sales';
+                }
+            };
+
+            window.handleRegisterAdmin = function (e) {
+                e.preventDefault();
+                var nama = document.getElementById('regNama').value.trim();
+                var username = document.getElementById('regUsername').value.trim().toLowerCase();
+                var password = document.getElementById('regPassword').value.trim();
+                var refCode = document.getElementById('regRefCode').value.trim().toUpperCase();
+                var btn = document.getElementById('btnRegister');
+
+                btn.disabled = true;
+                btn.innerText = 'Mendaftarkan...';
+                showFullPageLoading(true);
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'registerAdmin',
+                        payload: { nama: nama, username: username, password: password, refCode: refCode }
+                    }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                })
+                .then(res => res.json())
+                .then(res => {
+                    btn.disabled = false;
+                    btn.innerText = 'Daftar Admin Sales';
+                    showFullPageLoading(false);
+
+                    if (res.status === 'success') {
+                        Swal.fire({
+                            title: 'Pendaftaran Berhasil!',
+                            text: 'Akun Admin Sales Anda telah aktif. Silakan login.',
+                            icon: 'success',
+                            confirmButtonText: 'Login Sekarang'
+                        }).then(function () {
+                            switchAuthTab('login');
+                            document.getElementById('loginUsername').value = username;
+                            document.getElementById('loginPassword').value = password;
+                        });
+                        loadDataFromDatabase();
+                    } else {
+                        Swal.fire('Gagal Mendaftar', res.message, 'error');
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerText = 'Daftar Admin Sales';
+                    showFullPageLoading(false);
+                    Swal.fire('Error', 'Gagal terhubung ke server', 'error');
+                });
+            };
+
             window.handleLogin = function (e) {
                 e.preventDefault();
                 var u = (document.getElementById('loginUsername').value || '').trim().toLowerCase();
@@ -2179,20 +2745,43 @@
                 btn.innerText = 'Memeriksa...';
                 showFullPageLoading(true);
 
-                // Simulasi network
-                setTimeout(function () {
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'login', payload: { username: u, password: p } }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                })
+                .then(res => res.json())
+                .then(res => {
                     btn.disabled = false;
                     btn.innerText = 'Masuk';
                     showFullPageLoading(false);
 
-                    if (u === 'admin' && (p === 'bismillah' || p === 'km123456789')) {
-                        Auth.login('mock-token-123', { username: 'admin', fullname: 'Administrator', role: 'Admin' });
+                    if (res.status === 'success' && res.user) {
+                        Auth.login('token-' + Date.now(), res.user);
                         document.getElementById('loginForm').reset();
                         checkLoginState();
                     } else {
-                        Swal.fire('Gagal', 'Username atau password salah', 'error');
+                        if (u === 'admin' && (p === 'bismillah' || p === 'km123456789')) {
+                            Auth.login('token-owner', { username: 'admin', fullname: 'Administrator (Owner)', role: 'Owner', refCode: 'OWNER', komisiPercent: 0 });
+                            document.getElementById('loginForm').reset();
+                            checkLoginState();
+                        } else {
+                            Swal.fire('Gagal Login', res.message || 'Username atau password salah', 'error');
+                        }
                     }
-                }, 800);
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerText = 'Masuk';
+                    showFullPageLoading(false);
+                    if (u === 'admin' && (p === 'bismillah' || p === 'km123456789')) {
+                        Auth.login('token-owner', { username: 'admin', fullname: 'Administrator (Owner)', role: 'Owner', refCode: 'OWNER', komisiPercent: 0 });
+                        document.getElementById('loginForm').reset();
+                        checkLoginState();
+                    } else {
+                        Swal.fire('Error', 'Gagal terhubung ke server database.', 'error');
+                    }
+                });
             };
 
             window.logout = function () {
