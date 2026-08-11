@@ -1950,6 +1950,32 @@
             })();
 
             // ================= HELPERS =================
+            function parseNumeric(val) {
+                if (!val) return 0;
+                if (typeof val === 'number') return val;
+                var cleaned = String(val).replace(/[^0-9]/g, '');
+                return parseInt(cleaned, 10) || 0;
+            }
+
+            function formatImageUrl(url) {
+                if (!url) return '';
+                var trimmed = String(url).trim();
+                if (trimmed.includes(',')) {
+                    trimmed = trimmed.split(',')[0].trim();
+                }
+                return trimmed;
+            }
+
+            function handleImageError(imgEl, isThumb) {
+                if (imgEl && imgEl.parentElement) {
+                    if (isThumb) {
+                        imgEl.parentElement.innerHTML = '<div style="width:40px;height:40px;background:#e9ecef;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#adb5bd;"><i class="fas fa-image"></i></div>';
+                    } else {
+                        imgEl.parentElement.innerHTML = '<div class="d-flex align-items-center justify-content-center bg-light" style="aspect-ratio:16/9;"><i class="fas fa-image fa-3x text-muted"></i></div>';
+                    }
+                }
+            }
+
             function escapeHTML(str) {
                 if (!str) return '';
                 var div = document.createElement('div');
@@ -1958,7 +1984,9 @@
             }
 
             function formatRupiah(angka) {
-                return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                if (!angka && angka !== 0) return 'Rp 0';
+                var num = parseNumeric(angka);
+                return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             }
 
             function showFullPageLoading(show) {
@@ -2897,11 +2925,13 @@
 
             function renderKategoriTable() {
                 var tbody = document.getElementById('kategoriTableBody');
+                if (!tbody) return;
+                var list = (mockCategories && mockCategories.length > 0) ? mockCategories : defaultCategories;
                 var html = '';
-                if (mockCategories.length === 0) {
+                if (list.length === 0) {
                     html = '<tr><td colspan="3" class="text-center text-muted">Belum ada kategori.</td></tr>';
                 } else {
-                    mockCategories.forEach(function (k) {
+                    list.forEach(function (k) {
                         html += '<tr>';
                         html += '<td>' + escapeHTML(k.id) + '</td>';
                         html += '<td>' + escapeHTML(k.nama) + '</td>';
@@ -3031,11 +3061,13 @@
 
             function renderProdukTable() {
                 var tbody = document.getElementById('produkTableBody');
+                if (!tbody) return;
+                var list = (mockProducts && mockProducts.length > 0) ? mockProducts : defaultProducts;
                 var html = '';
-                if (mockProducts.length === 0) {
+                if (list.length === 0) {
                     html = '<tr><td colspan="5" class="text-center text-muted">Belum ada produk.</td></tr>';
                 } else {
-                    mockProducts.forEach(function (p) {
+                    list.forEach(function (p) {
                         var formattedImg = formatImageUrl(p.gambar);
                         var img = formattedImg ? '<img src="' + escapeHTML(formattedImg) + '" width="40" height="40" style="object-fit:cover; border-radius:5px;" onerror="handleImageError(this, true)">' : '<div style="width:40px;height:40px;background:#e9ecef;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#adb5bd;"><i class="fas fa-image"></i></div>';
                         html += '<tr>';
@@ -3217,11 +3249,13 @@
 
             window.renderTestimoniTable = function () {
                 var tbody = document.getElementById('testimoniTableBody');
+                if (!tbody) return;
+                var list = (mockTestimonials && mockTestimonials.length > 0) ? mockTestimonials : defaultTestimonials;
                 var html = '';
-                if (mockTestimonials.length === 0) {
+                if (list.length === 0) {
                     html = '<tr><td colspan="4" class="text-center text-muted">Belum ada testimoni.</td></tr>';
                 } else {
-                    mockTestimonials.forEach(function (t) {
+                    list.forEach(function (t) {
                         var avatar = t.avatar ? escapeHTML(t.avatar) : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(t.nama) + '&background=random';
                         var img = '<img src="' + avatar + '" width="40" height="40" style="object-fit:cover; border-radius:50%; border:2px solid var(--border-color);">';
                         html += '<tr>';
