@@ -408,7 +408,7 @@
         .product-img-wrapper {
             position: relative;
             width: 100%;
-            height: 165px;
+            aspect-ratio: 1 / 1;
             padding: 0;
             margin: 0;
             display: flex;
@@ -416,14 +416,14 @@
             justify-content: center;
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
             overflow: hidden;
-            border-radius: 12px;
+            border-radius: 14px;
         }
 
         .product-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
+            object-fit: contain;
+            border-radius: 14px;
             transition: transform 0.4s ease;
         }
 
@@ -2606,8 +2606,8 @@
                 filtered.forEach(function (p) {
                     var formattedUrl = formatImageUrl(p.gambar);
                     var imgHtml = formattedUrl
-                        ? '<img src="' + escapeHTML(formattedUrl) + '" class="product-img" style="width:100%!important;height:100%!important;object-fit:cover!important;border-radius:12px!important;margin:0!important;padding:0!important;display:block!important;" alt="' + escapeHTML(p.nama) + '" onerror="handleImageError(this, false)">'
-                        : '<div class="product-img" style="width:100%!important;height:165px!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:2.5rem;color:#94a3b8;background:rgba(99, 102, 241, 0.05);border-radius:12px!important;"><i class="fas fa-box"></i></div>';
+                        ? '<img src="' + escapeHTML(formattedUrl) + '" class="product-img" style="width:100%!important;height:100%!important;aspect-ratio:1/1!important;object-fit:contain!important;border-radius:14px!important;margin:0!important;padding:0!important;display:block!important;background:#f8fafc;" alt="' + escapeHTML(p.nama) + '" onerror="handleImageError(this, false)">'
+                        : '<div class="product-img" style="width:100%!important;aspect-ratio:1/1!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:2.5rem;color:#94a3b8;background:rgba(99, 102, 241, 0.05);border-radius:14px!important;"><i class="fas fa-box"></i></div>';
 
                     var badgeHtml = p.badge ? '<div class="badge-bestseller"><i class="fas fa-bolt"></i> ' + escapeHTML(p.badge) + '</div>' : '';
 
@@ -2643,7 +2643,7 @@
                     html += `
             <div class="col-lg-3 col-md-4 col-sm-6 col-6 mb-4">
               <div class="product-card">
-                <div class="product-img-wrapper" onclick="openPublicDetail('${p.id}')" style="cursor:pointer; width:100%!important; height:165px!important; padding:0!important; margin:0!important; overflow:hidden!important; border-radius:12px!important; position:relative!important;">
+                <div class="product-img-wrapper" onclick="openPublicDetail('${p.id}')" style="cursor:pointer; width:100%!important; aspect-ratio:1/1!important; padding:0!important; margin:0!important; overflow:hidden!important; border-radius:14px!important; position:relative!important; background:rgba(99, 102, 241, 0.04); display:flex!important; align-items:center!important; justify-content:center!important;">
                     ${imgHtml}
                     ${badgeHtml}
                     ${diskonBadgeHtml}
