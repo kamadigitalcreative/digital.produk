@@ -2048,6 +2048,18 @@
 
             // ================= APP INITIALIZATION =================
             window.addEventListener('DOMContentLoaded', function () {
+                // Deteksi & Bersihkan Kode Referal jika Kunjungan Langsung (Direct Visit)
+                var urlParams = new URLSearchParams(window.location.search);
+                var refParam = urlParams.get('ref') || urlParams.get('refCode') || urlParams.get('referral');
+
+                if (refParam && refParam.trim() !== '') {
+                    // Hanya simpan jika ada parameter ?ref= di URL
+                    localStorage.setItem('kama_ref_code', refParam.trim().toUpperCase());
+                } else {
+                    // Jika berkunjung langsung tanpa ?ref= di URL, bersihkan referral lama agar tidak salah klaim reseller
+                    localStorage.removeItem('kama_ref_code');
+                }
+
                 checkLoginState();
 
                 if (SCRIPT_URL && SCRIPT_URL !== 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI') {
@@ -2691,7 +2703,10 @@
                     if (p.stok && p.stok > 0) p.stok -= 1;
                     renderPublicProducts();
 
-                    var refCode = localStorage.getItem('kama_ref_code') || 'DIRECT';
+                    // Cek parameter ref dari URL atau localStorage (HANYA jika ada referral aktif)
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var currentUrlRef = urlParams.get('ref') || urlParams.get('refCode') || urlParams.get('referral');
+                    var refCode = currentUrlRef ? currentUrlRef.trim().toUpperCase() : (localStorage.getItem('kama_ref_code') || 'DIRECT');
 
                     // Track transaction on backend
                     if (SCRIPT_URL && SCRIPT_URL !== 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI') {
@@ -2724,6 +2739,7 @@
                         paymentUrl = 'https://mayar.id/pay/checkout?product=' + encodeURIComponent(p.nama) + '&amount=' + p.harga;
                     }
 
+                    // HANYA tempelkan ?ref= jika BENAR-BENAR ada reseller (bukan DIRECT)
                     if (refCode && refCode !== 'DIRECT') {
                         var sep = paymentUrl.includes('?') ? '&' : '?';
                         paymentUrl += sep + 'ref=' + encodeURIComponent(refCode);
