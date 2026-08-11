@@ -1682,25 +1682,37 @@
         </div>
     </div>
 
-    <!-- Modal Lupa Password -->
+    <!-- Modal Reset Password Mandiri -->
     <div class="modal fade" id="modalForgotPassword" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
                 <form id="formForgotPassword" onsubmit="handleForgotPassword(event)">
                     <div class="modal-header border-0 bg-light p-4" style="border-radius: 20px 20px 0 0;">
-                        <h5 class="modal-title fw-bold text-dark"><i class="fas fa-key text-primary me-2"></i> Lupa Password Akun</h5>
+                        <h5 class="modal-title fw-bold text-dark"><i class="fas fa-key text-primary me-2"></i> Reset Password Akun</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body p-4">
-                        <p class="text-muted small mb-3">Masukkan Username akun Anda. Informasi pemulihan akun akan dikirimkan secara otomatis ke email Admin Store Kama Creative (<strong>kamabalicreative@gmail.com</strong>) dengan label <em>Store Kama Creative</em>.</p>
+                        <p class="text-muted small mb-3">Masukkan Username & Kode Referal Anda untuk verifikasi identitas. Password Anda akan langsung diperbarui secara <strong>otomatis saat ini juga</strong>.</p>
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Username Akun</label>
-                            <input type="text" class="form-control form-control-lg rounded-3" id="forgotUsername" required placeholder="Contoh: admin atau budi123">
+                            <input type="text" class="form-control rounded-3" id="forgotUsername" required placeholder="Contoh: budi123">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Kode Referal Unik Anda (Verifikasi Identitas)</label>
+                            <input type="text" class="form-control rounded-3 text-uppercase fw-bold" id="forgotRefCode" required placeholder="Contoh: BUDI123 (atau OWNER untuk Admin)">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Password Baru</label>
+                            <input type="password" class="form-control rounded-3" id="forgotNewPassword" required placeholder="Masukkan password baru">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Konfirmasi Password Baru</label>
+                            <input type="password" class="form-control rounded-3" id="forgotConfirmPassword" required placeholder="Ulangi password baru">
                         </div>
                     </div>
                     <div class="modal-footer border-0 p-4 bg-light" style="border-radius: 0 0 20px 20px;">
                         <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold" id="btnForgotSubmit">Kirim Permintaan Reset</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold" id="btnForgotSubmit">Reset Password Sekarang</button>
                     </div>
                 </form>
             </div>
@@ -2890,42 +2902,57 @@
             window.handleForgotPassword = function (e) {
                 e.preventDefault();
                 var username = (document.getElementById('forgotUsername').value || '').trim().toLowerCase();
+                var refCode = (document.getElementById('forgotRefCode').value || '').trim().toUpperCase();
+                var newPassword = (document.getElementById('forgotNewPassword').value || '').trim();
+                var confirmPassword = (document.getElementById('forgotConfirmPassword').value || '').trim();
                 var btn = document.getElementById('btnForgotSubmit');
 
-                if (!username) {
-                    Swal.fire('Peringatan', 'Username wajib diisi!', 'warning');
+                if (!username || !refCode || !newPassword) {
+                    Swal.fire('Peringatan', 'Semua kolom wajib diisi!', 'warning');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    Swal.fire('Peringatan', 'Konfirmasi password baru tidak cocok!', 'warning');
                     return;
                 }
 
                 btn.disabled = true;
-                btn.innerText = 'Mengirim...';
+                btn.innerText = 'Memperbarui...';
                 showFullPageLoading(true);
 
                 fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'forgotPassword', payload: { username: username } }),
+                    body: JSON.stringify({
+                        action: 'resetPasswordSelf',
+                        payload: { username: username, refCode: refCode, newPassword: newPassword }
+                    }),
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                 })
                 .then(res => res.json())
                 .then(res => {
                     btn.disabled = false;
-                    btn.innerText = 'Kirim Permintaan Reset';
+                    btn.innerText = 'Reset Password Sekarang';
                     showFullPageLoading(false);
-                    if (modalForgotObj) modalForgotObj.hide();
 
                     if (res.status === 'success') {
+                        if (modalForgotObj) modalForgotObj.hide();
                         Swal.fire({
-                            title: 'Notifikasi Berhasil Dikirim!',
-                            text: 'Informasi akun telah dikirim ke email kamabalicreative@gmail.com dengan label Store Kama Creative.',
-                            icon: 'success'
+                            title: 'Password Berhasil Diperbarui!',
+                            text: 'Password akun Anda telah berhasil diperbarui secara otomatis. Silakan login menggunakan password baru Anda.',
+                            icon: 'success',
+                            confirmButtonText: 'Login Sekarang'
+                        }).then(function () {
+                            document.getElementById('loginUsername').value = username;
+                            document.getElementById('loginPassword').value = newPassword;
                         });
                     } else {
-                        Swal.fire('Gagal', res.message, 'error');
+                        Swal.fire('Gagal Reset Password', res.message, 'error');
                     }
                 })
                 .catch(err => {
                     btn.disabled = false;
-                    btn.innerText = 'Kirim Permintaan Reset';
+                    btn.innerText = 'Reset Password Sekarang';
                     showFullPageLoading(false);
                     Swal.fire('Error', 'Gagal terhubung ke server', 'error');
                 });
