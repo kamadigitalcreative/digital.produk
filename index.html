@@ -1172,7 +1172,7 @@
         <div class="auth-card">
             <div class="text-center mb-3">
                 <h3 class="font-weight-bold text-primary"><i class="fas fa-store"></i> Kama Creative</h3>
-                <p class="text-muted small mb-0" id="authSubTitle">Portal Akun Admin & Sales</p>
+                <p class="text-muted small mb-0" id="authSubTitle">Portal Akun Owner & Reseller</p>
             </div>
 
             <!-- Auth Nav Tabs -->
@@ -1181,7 +1181,7 @@
                     <button class="nav-link active border-0 rounded-pill py-2 w-100 fw-bold small" id="tabLoginBtn" onclick="switchAuthTab('login')">Masuk</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link border-0 rounded-pill py-2 w-100 fw-bold small text-dark" id="tabRegisterBtn" onclick="switchAuthTab('register')">Daftar Admin Sales</button>
+                    <button class="nav-link border-0 rounded-pill py-2 w-100 fw-bold small text-dark" id="tabRegisterBtn" onclick="switchAuthTab('register')">Daftar Reseller</button>
                 </li>
             </ul>
 
@@ -1199,7 +1199,7 @@
                 <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none text-muted small" onclick="goBackToLanding()"><i class="fas fa-arrow-left me-1"></i> Kembali ke Toko</button>
             </form>
 
-            <!-- Form 2: Pendaftaran Mandiri Admin Sales -->
+            <!-- Form 2: Pendaftaran Mandiri Reseller -->
             <form id="registerForm" class="d-none" onsubmit="handleRegisterAdmin(event)">
                 <div class="mb-3">
                     <label class="form-label small fw-bold">Nama Lengkap</label>
@@ -1221,7 +1221,7 @@
                     </div>
                     <div class="form-text text-muted" style="font-size:0.75rem;">Kode ini akan digunakan untuk melacak pembeli dari link Anda.</div>
                 </div>
-                <button type="submit" class="btn btn-success w-100 py-2 rounded-pill fw-bold" id="btnRegister">Daftar Admin Sales</button>
+                <button type="submit" class="btn btn-success w-100 py-2 rounded-pill fw-bold" id="btnRegister">Daftar Reseller</button>
                 <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none text-muted small" onclick="goBackToLanding()"><i class="fas fa-arrow-left me-1"></i> Kembali ke Toko</button>
             </form>
         </div>
@@ -1282,7 +1282,7 @@
                     <div class="col-md-3 col-sm-6">
                         <div class="card-dashboard border-0 shadow-sm" style="background: linear-gradient(135deg, #d97706, #f59e0b); color:#fff;">
                             <h3 id="ownerTotalAdmin" class="text-white fw-bold">0</h3>
-                            <div class="small opacity-75 fw-semibold">Total Admin Sales</div>
+                            <div class="small opacity-75 fw-semibold">Total Reseller</div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6">
@@ -1295,15 +1295,15 @@
 
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                     <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0"><i class="fas fa-users-cog text-primary me-2"></i> Performa Ringkas Admin Sales</h5>
-                        <button class="btn btn-primary btn-sm rounded-pill" onclick="showPage('manage-admins')">Kelola Admin Sales <i class="fas fa-arrow-right ms-1"></i></button>
+                        <h5 class="fw-bold mb-0"><i class="fas fa-users-cog text-primary me-2"></i> Performa Ringkas Reseller</h5>
+                        <button class="btn btn-primary btn-sm rounded-pill" onclick="showPage('manage-admins')">Kelola Reseller <i class="fas fa-arrow-right ms-1"></i></button>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Nama Admin</th>
+                                        <th>Nama Reseller</th>
                                         <th>Kode Referal</th>
                                         <th>Komisi (%)</th>
                                         <th>Customer</th>
@@ -1320,12 +1320,12 @@
                 </div>
             </div>
 
-            <!-- Page 2: Kelola Admin Sales & Komisi (%) - KHUSUS OWNER -->
+            <!-- Page 2: Kelola Reseller & Komisi (%) - KHUSUS OWNER -->
             <div id="page-manage-admins" class="app-page d-none">
                 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                     <div>
-                        <h4 class="fw-bold mb-1"><i class="fas fa-users-cog text-primary me-2"></i> Kelola Admin Sales & Komisi (%)</h4>
-                        <p class="text-muted small mb-0">Atur persentase komisi (%) dan lihat statistik pembeli per admin</p>
+                        <h4 class="fw-bold mb-1"><i class="fas fa-users-cog text-primary me-2"></i> Kelola Reseller & Komisi (%)</h4>
+                        <p class="text-muted small mb-0">Atur persentase komisi (%) dan lihat statistik pembeli per reseller</p>
                     </div>
                 </div>
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -1334,7 +1334,7 @@
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Admin Sales</th>
+                                        <th>Reseller</th>
                                         <th>Kode Referal</th>
                                         <th>Link Referal</th>
                                         <th>Komisi (%)</th>
@@ -1358,7 +1358,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                     <div>
                         <h4 class="fw-bold mb-1"><i class="fas fa-receipt text-primary me-2"></i> Laporan Detail Penjualan Toko</h4>
-                        <p class="text-muted small mb-0">Riwayat transaksi lengkap pembeli dari seluruh link admin sales</p>
+                        <p class="text-muted small mb-0">Riwayat transaksi lengkap pembeli dari seluruh link reseller</p>
                     </div>
                 </div>
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -1369,7 +1369,7 @@
                                     <tr>
                                         <th>ID Transaksi</th>
                                         <th>Tanggal</th>
-                                        <th>Admin Sales</th>
+                                        <th>Reseller</th>
                                         <th>Kode Referal</th>
                                         <th>Produk</th>
                                         <th>Harga</th>
@@ -1387,12 +1387,12 @@
                 </div>
             </div>
 
-            <!-- Page 4: Dashboard Khusus Admin Sales -->
+            <!-- Page 4: Dashboard Khusus Reseller -->
             <div id="page-dashboard-admin" class="app-page d-none">
                 <div class="row mb-4">
                     <div class="col-12">
                         <div class="p-4 rounded-4 shadow-sm position-relative overflow-hidden" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); color:#fff;">
-                            <h4 class="fw-bold mb-2">Selamat Datang, <span id="adminSalesName">Admin</span>! 👋</h4>
+                            <h4 class="fw-bold mb-2">Selamat Datang, <span id="adminSalesName">Reseller</span>! 👋</h4>
                             <p class="mb-3 opacity-90 small">Gunakan link referal khusus Anda di bawah ini untuk dibagikan ke calon pembeli. Setiap pembelian produk dari link Anda akan menghasilkan komisi!</p>
                             
                             <div class="bg-white p-2 rounded-3 d-flex align-items-center justify-content-between flex-wrap gap-2 max-w-100">
@@ -1467,13 +1467,13 @@
                     <div class="modal-content border-0 shadow-lg rounded-4">
                         <form id="formEditCommission" onsubmit="saveAdminCommission(event)">
                             <div class="modal-header border-0 bg-light">
-                                <h5 class="modal-title fw-bold">Atur Persentase Komisi Admin</h5>
+                                <h5 class="modal-title fw-bold">Atur Persentase Komisi Reseller</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body p-4">
                                 <input type="hidden" id="editAdminId">
                                 <div class="mb-3">
-                                    <label class="form-label small fw-bold">Nama Admin</label>
+                                    <label class="form-label small fw-bold">Nama Reseller</label>
                                     <input type="text" class="form-control bg-light" id="editAdminNama" readonly>
                                 </div>
                                 <div class="mb-3">
@@ -1486,7 +1486,7 @@
                                         <input type="number" class="form-control form-control-lg fw-bold" id="editAdminPercent" min="0" max="100" step="0.5" required placeholder="10">
                                         <span class="input-group-text fw-bold">%</span>
                                     </div>
-                                    <div class="form-text text-muted">Komisi dihitung otomatis dari total omset harga produk yang dijual admin ini.</div>
+                                    <div class="form-text text-muted">Komisi dihitung otomatis dari total omset harga produk yang dijual reseller ini.</div>
                                 </div>
                             </div>
                             <div class="modal-footer border-0">
@@ -1950,7 +1950,7 @@
                     mainApp.classList.remove('d-none');
 
                     var user = Auth.getUser();
-                    document.getElementById('displayUser').innerText = user.fullname + (user.role === 'Owner' ? ' (Owner)' : ' (Admin Sales)');
+                    document.getElementById('displayUser').innerText = user.fullname + (user.role === 'Owner' ? ' (Owner)' : ' (Reseller)');
                     var avatarIcon = document.getElementById('userAvatarIcon');
                     if (avatarIcon) avatarIcon.innerText = (user.fullname || 'A').charAt(0).toUpperCase();
 
@@ -1978,7 +1978,7 @@
                             <i class="fas fa-crown text-warning"></i> Dashboard Owner
                         </a>
                         <a class="nav-item-custom" onclick="showPage('manage-admins', this)">
-                            <i class="fas fa-users-cog"></i> Kelola Admin & Komisi (%)
+                            <i class="fas fa-users-cog"></i> Kelola Reseller & Komisi (%)
                         </a>
                         <a class="nav-item-custom" onclick="showPage('sales-reports', this)">
                             <i class="fas fa-receipt"></i> Laporan Penjualan Toko
@@ -1994,7 +1994,7 @@
                         </a>
                     `;
                 } else {
-                    // Admin Sales
+                    // Reseller
                     html += `
                         <a class="nav-item-custom active" onclick="showPage('dashboard-admin', this)">
                             <i class="fas fa-user-chart"></i> Dashboard Penjualan Saya
@@ -2047,11 +2047,11 @@
                     document.getElementById('ownerTotalAdmin').innerText = adminSalesList.length;
                     document.getElementById('ownerTotalTerjual').innerText = totalTerjual;
 
-                    // Summary admin table
+                    // Summary reseller table
                     var tbody = document.getElementById('ownerSummaryAdminTable');
                     var html = '';
                     if (adminSalesList.length === 0) {
-                        html = '<tr><td colspan="6" class="text-center text-muted py-3">Belum ada Admin Sales yang terdaftar.</td></tr>';
+                        html = '<tr><td colspan="6" class="text-center text-muted py-3">Belum ada Reseller yang terdaftar.</td></tr>';
                     } else {
                         adminSalesList.forEach(function (adm) {
                             var admSales = mockSales.filter(s => s.refCode === adm.refCode);
@@ -2109,7 +2109,7 @@
                 var adminSalesList = mockAdmins.filter(a => a.role === 'Admin');
 
                 if (adminSalesList.length === 0) {
-                    html = '<tr><td colspan="8" class="text-center text-muted py-4">Belum ada Admin Sales terdaftar.</td></tr>';
+                    html = '<tr><td colspan="8" class="text-center text-muted py-4">Belum ada Reseller terdaftar.</td></tr>';
                 } else {
                     adminSalesList.forEach(function (adm) {
                         var admSales = mockSales.filter(s => s.refCode === adm.refCode);
@@ -2127,7 +2127,7 @@
                                 <td><strong class="text-success">${formatRupiah(admKomisi)}</strong></td>
                                 <td class="text-end">
                                     <button class="btn btn-sm btn-primary rounded-pill me-1" onclick="openEditCommissionModal('${adm.id}')" title="Atur % Komisi"><i class="fas fa-percentage"></i> Edit %</button>
-                                    <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="deleteAdminSales('${adm.id}')" title="Hapus Admin"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="deleteAdminSales('${adm.id}')" title="Hapus Reseller"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                         `;
@@ -2262,8 +2262,8 @@
 
             window.deleteAdminSales = function (id) {
                 Swal.fire({
-                    title: 'Hapus Admin Sales?',
-                    text: 'Akun admin ini akan dihapus!',
+                    title: 'Hapus Reseller?',
+                    text: 'Akun reseller ini akan dihapus!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -2278,7 +2278,7 @@
                         .then(r => r.json())
                         .then(res => {
                             if (res.status === 'success') {
-                                Swal.fire('Sukses', 'Admin sales berhasil dihapus', 'success');
+                                Swal.fire('Sukses', 'Reseller berhasil dihapus', 'success');
                                 loadDataFromDatabase();
                             } else {
                                 Swal.fire('Error', res.message, 'error');
@@ -2681,7 +2681,7 @@
                     tabRegBtn.classList.remove('active');
                     tabRegBtn.classList.add('text-dark');
                     tabLoginBtn.classList.add('active');
-                    subTitle.innerText = 'Portal Akun Admin & Sales';
+                    subTitle.innerText = 'Portal Akun Owner & Reseller';
                 }
             };
 
@@ -2708,13 +2708,13 @@
                 .then(res => res.json())
                 .then(res => {
                     btn.disabled = false;
-                    btn.innerText = 'Daftar Admin Sales';
+                    btn.innerText = 'Daftar Reseller';
                     showFullPageLoading(false);
 
                     if (res.status === 'success') {
                         Swal.fire({
                             title: 'Pendaftaran Berhasil!',
-                            text: 'Akun Admin Sales Anda telah aktif. Silakan login.',
+                            text: 'Akun Reseller Anda telah aktif. Silakan login.',
                             icon: 'success',
                             confirmButtonText: 'Login Sekarang'
                         }).then(function () {
@@ -2729,7 +2729,7 @@
                 })
                 .catch(err => {
                     btn.disabled = false;
-                    btn.innerText = 'Daftar Admin Sales';
+                    btn.innerText = 'Daftar Reseller';
                     showFullPageLoading(false);
                     Swal.fire('Error', 'Gagal terhubung ke server', 'error');
                 });
