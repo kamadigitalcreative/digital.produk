@@ -1457,11 +1457,97 @@
                                 </tbody>
                             </table>
                         </div>
+            </div>
+
+            <!-- Page 5: Kelola Produk (Khusus Owner) -->
+            <div id="page-produk" class="app-page d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold mb-1"><i class="fas fa-box text-primary me-2"></i> Kelola Produk Digital</h4>
+                        <p class="text-muted small mb-0">Tambah, edit, hapus produk, atur harga promo, stok, dan link pembayaran Mayar</p>
+                    </div>
+                    <button class="btn btn-primary rounded-pill px-3 fw-bold" onclick="openProdukModal()"><i class="fas fa-plus me-1"></i> Tambah Produk Baru</button>
+                </div>
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Gambar</th>
+                                        <th>Nama Produk</th>
+                                        <th>Kategori</th>
+                                        <th>Harga</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="produkTableBody">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal Edit Komisi % (Khusus Owner) -->
+            <!-- Page 6: Kategori Produk (Khusus Owner) -->
+            <div id="page-kategori" class="app-page d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold mb-1"><i class="fas fa-tags text-primary me-2"></i> Kategori Produk</h4>
+                        <p class="text-muted small mb-0">Kelola kategori untuk mengelompokkan produk toko Anda</p>
+                    </div>
+                    <button class="btn btn-primary rounded-pill px-3 fw-bold" onclick="openKategoriModal()"><i class="fas fa-plus me-1"></i> Tambah Kategori</button>
+                </div>
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID Kategori</th>
+                                        <th>Nama Kategori</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="kategoriTableBody">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 7: Kelola Testimoni (Khusus Owner) -->
+            <div id="page-testimoni" class="app-page d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold mb-1"><i class="fas fa-comment-dots text-primary me-2"></i> Kelola Testimoni Pelanggan</h4>
+                        <p class="text-muted small mb-0">Tambah dan kelola ulasan pembeli untuk ditampilkan di landing page</p>
+                    </div>
+                    <button class="btn btn-primary rounded-pill px-3 fw-bold" onclick="openTestimoniModal()"><i class="fas fa-plus me-1"></i> Tambah Testimoni</button>
+                </div>
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Avatar</th>
+                                        <th>Nama & Peran</th>
+                                        <th>Isi Testimoni</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="testimoniTableBody">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="modal fade" id="modalEditCommission" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content border-0 shadow-lg rounded-4">
