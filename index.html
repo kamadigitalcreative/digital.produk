@@ -2563,8 +2563,8 @@
                 filtered.forEach(function (p) {
                     var formattedUrl = formatImageUrl(p.gambar);
                     var imgHtml = formattedUrl
-                        ? '<img src="' + escapeHTML(formattedUrl) + '" class="product-img" alt="' + escapeHTML(p.nama) + '" onerror="handleImageError(this, false)">'
-                        : '<div class="product-img" style="display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#94a3b8;"><i class="fas fa-box"></i></div>';
+                        ? '<img src="' + escapeHTML(formattedUrl) + '" class="product-img" style="width:100%!important;height:100%!important;object-fit:cover!important;border-radius:0!important;margin:0!important;padding:0!important;display:block!important;" alt="' + escapeHTML(p.nama) + '" onerror="handleImageError(this, false)">'
+                        : '<div class="product-img" style="width:100%!important;height:100%!important;aspect-ratio:1/1!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:2.5rem;color:#94a3b8;background:rgba(99, 102, 241, 0.05);"><i class="fas fa-box"></i></div>';
 
                     var badgeHtml = p.badge ? '<div class="badge-bestseller"><i class="fas fa-bolt"></i> ' + escapeHTML(p.badge) + '</div>' : '';
 
@@ -2600,7 +2600,7 @@
                     html += `
             <div class="col-md-4 col-lg-3 col-sm-6 col-6 mb-4">
               <div class="product-card">
-                <div class="product-img-wrapper" onclick="openPublicDetail('${p.id}')" style="cursor:pointer;">
+                <div class="product-img-wrapper" onclick="openPublicDetail('${p.id}')" style="cursor:pointer; width:100%!important; aspect-ratio:1/1!important; padding:0!important; margin:0!important; overflow:hidden!important; border-radius:20px 20px 0 0!important; position:relative!important;">
                     ${imgHtml}
                     ${badgeHtml}
                     ${diskonBadgeHtml}
@@ -2679,6 +2679,11 @@
                     }
                     else {
                         paymentUrl = 'https://mayar.id/pay/checkout?product=' + encodeURIComponent(p.nama) + '&amount=' + p.harga;
+                    }
+
+                    if (refCode && refCode !== 'DIRECT') {
+                        var sep = paymentUrl.includes('?') ? '&' : '?';
+                        paymentUrl += sep + 'ref=' + encodeURIComponent(refCode);
                     }
 
                     window.open(paymentUrl, '_blank');
