@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="https://cdn.phototourl.com/free/2026-05-02-c6dcdc8e-17e9-419a-ac71-37a9635e6eb3.png" type="image/png">
 
     <!-- SEO & Open Graph -->
     <title>Kama Creative - Produk Digital</title>
@@ -1632,50 +1632,51 @@
         </div>
     </div>
 
-    <!-- Modal Detail Produk Public -->
+    <!-- Modal Detail Produk Public (Compact 1 Area) -->
     <div class="modal fade" id="modalPublicDetail" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
-                <div class="modal-header border-0 bg-light">
-                    <h5 class="modal-title fw-bold" id="detailKategori"
-                        style="color: #4f46e5; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
-                        Kategori</h5>
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="modal-header border-0 bg-light py-2.5 px-3">
+                    <span class="badge bg-primary text-uppercase px-2.5 py-1" id="detailKategori" style="letter-spacing:0.5px; font-size: 0.75rem;">Kategori</span>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-0">
-                    <div id="detailCarousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner" id="detailCarouselInner">
-                            <!-- Rendered by JS -->
+                <div class="modal-body p-3">
+                    <div class="row g-3 align-items-center">
+                        <!-- Left Column: Carousel Image -->
+                        <div class="col-md-5 col-12">
+                            <div id="detailCarousel" class="carousel slide" data-bs-ride="carousel" style="border-radius: 14px; overflow: hidden; max-height: 270px; background: rgba(99, 102, 241, 0.04);">
+                                <div class="carousel-inner" id="detailCarouselInner">
+                                    <!-- Rendered by JS -->
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#detailCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 10px; transform: scale(0.7);"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#detailCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 10px; transform: scale(0.7);"></span>
+                                </button>
+                            </div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#detailCarousel"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"
-                                style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 20px;"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#detailCarousel"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"
-                                style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 20px;"></span>
-                        </button>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="fw-bold mb-2" id="detailNama">Nama Produk</h3>
-                        <div id="detailPromoTimer" class="promo-timer mb-2 d-none"
-                            style="font-size:0.9rem; color:#ef4444; font-weight:700;"><i class="fas fa-clock"></i> Promo
-                            berakhir: <span></span></div>
-                        <div class="mb-3">
-                            <span id="detailHargaCoret" class="text-muted text-decoration-line-through me-2"
-                                style="font-size: 1.1rem;"></span>
-                            <span id="detailHarga" class="fw-bold text-danger" style="font-size: 1.5rem;"></span>
+
+                        <!-- Right Column: Product Info -->
+                        <div class="col-md-7 col-12 d-flex flex-column justify-content-between">
+                            <div>
+                                <h4 class="fw-bold text-dark mb-1" id="detailNama" style="font-size: 1.25rem;">Nama Produk</h4>
+                                <div id="detailPromoTimer" class="promo-timer mb-2 d-none" style="font-size:0.8rem; color:#ef4444; font-weight:700;">
+                                    <i class="fas fa-clock"></i> Promo berakhir: <span></span>
+                                </div>
+                                <div class="mb-2">
+                                    <span id="detailHargaCoret" class="text-muted text-decoration-line-through me-2 small"></span>
+                                    <span id="detailHarga" class="fw-bold text-success" style="font-size: 1.35rem;"></span>
+                                </div>
+                                <div class="bg-light p-2.5 rounded-3 mb-3" style="max-height: 120px; overflow-y: auto;">
+                                    <h6 class="fw-bold small mb-1 text-secondary" style="font-size:0.78rem;">Deskripsi Produk</h6>
+                                    <p id="detailDeskripsi" class="text-muted small mb-0" style="white-space: pre-line; line-height: 1.45; font-size: 0.82rem;"></p>
+                                </div>
+                            </div>
+                            <button id="btnDetailBeli" class="btn btn-primary w-100 py-2.5 rounded-pill fw-bold" style="font-size: 0.95rem;">
+                                <i class="fas fa-shopping-cart me-2"></i> Beli Sekarang <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
                         </div>
-                        <div class="bg-light p-3 rounded mb-4">
-                            <h6 class="fw-bold mb-2">Deskripsi Produk</h6>
-                            <p id="detailDeskripsi" class="text-muted mb-0"
-                                style="white-space: pre-line; line-height: 1.6;"></p>
-                        </div>
-                        <button id="btnDetailBeli" class="btn-buy w-100 py-3" style="font-size: 1.1rem;">
-                            <i class="fas fa-shopping-cart me-2"></i> Dapatkan Sekarang
-                        </button>
                     </div>
                 </div>
             </div>
@@ -2772,15 +2773,15 @@
                         var formatted = formatImageUrl(url);
                         carouselInner.innerHTML += `
                             <div class="carousel-item ${activeClass}">
-                                <img src="${escapeHTML(formatted)}" class="d-block w-100" style="aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; background: #f8fafc;" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'d-flex align-items-center justify-content-center bg-light\\' style=\\'aspect-ratio: 1/1;\\'><i class=\\'fas fa-image fa-4x text-muted\\'></i></div>';">
+                                <img src="${escapeHTML(formatted)}" class="d-block w-100" style="height: 270px; object-fit: cover; border-radius: 12px; background: #f8fafc;" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'d-flex align-items-center justify-content-center bg-light\\' style=\\'height: 270px;\\'><i class=\\'fas fa-image fa-3x text-muted\\'></i></div>';">
                             </div>
                         `;
                     });
                 } else {
                     carouselInner.innerHTML = `
                         <div class="carousel-item active">
-                            <div class="d-flex align-items-center justify-content-center bg-light" style="aspect-ratio: 16/9;">
-                                <i class="fas fa-image fa-4x text-muted"></i>
+                            <div class="d-flex align-items-center justify-content-center bg-light" style="height: 270px; border-radius: 12px;">
+                                <i class="fas fa-image fa-3x text-muted"></i>
                             </div>
                         </div>
                     `;
