@@ -798,66 +798,6 @@
             color: #fff;
         }
 
-        /* Admin Auth & Shell */
-        .auth-page {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f4f6f9;
-        }
-
-        .auth-card {
-            background: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .app-shell {
-            min-height: 100vh;
-            display: flex;
-            background-color: #f4f6f9;
-        }
-
-        .sidebar {
-            width: 260px;
-            background: #212529;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .sidebar-brand {
-            padding: 20px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-item-custom {
-            color: rgba(255, 255, 255, 0.7);
-            padding: 12px 20px;
-            display: block;
-            text-decoration: none;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-
-        .nav-item-custom:hover,
-        .nav-item-custom.active {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid #4f46e5;
-        }
-
-        .nav-item-custom i {
-            width: 25px;
-        }
-
         .main-content {
             flex-grow: 1;
             display: flex;
@@ -866,12 +806,13 @@
         }
 
         .topbar {
-            background: #fff;
+            background: var(--header-bg);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .app-page {
@@ -879,10 +820,11 @@
         }
 
         .card-dashboard {
-            background: #fff;
-            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
             padding: 25px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-sm);
             text-align: center;
         }
 
@@ -890,7 +832,22 @@
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 5px;
-            color: #4f46e5;
+            color: #6366f1;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                bottom: 0;
+                z-index: 1050;
+                transition: left 0.3s ease;
+                box-shadow: 4px 0 25px rgba(0, 0, 0, 0.5);
+            }
+            .sidebar.show {
+                left: 0;
+            }
         }
 
         .testimonial-slider-container {
@@ -1269,7 +1226,10 @@
         <main class="main-content">
             <!-- Topbar -->
             <header class="topbar">
-                <div>
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-outline-secondary btn-sm d-md-none me-1" onclick="toggleAdminSidebar()" title="Toggle Sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <button class="btn btn-outline-secondary btn-sm" onclick="goBackToLanding()"><i
                             class="fas fa-external-link-alt"></i> Lihat Toko</button>
                 </div>
@@ -1666,14 +1626,6 @@
                                         }
                                     }
 
-                                    // 3. Fallback Spesifik Produk Photo Selection & Create Invoice
-                                    if (pNamaLower.includes('photo selection') && (!parseNumeric(p.hargaCoret) || parseNumeric(p.hargaCoret) <= parseNumeric(p.harga))) {
-                                        p.hargaCoret = 50000;
-                                    }
-                                    if (pNamaLower.includes('create invoice') && (!parseNumeric(p.hargaCoret) || parseNumeric(p.hargaCoret) <= parseNumeric(p.harga))) {
-                                        p.hargaCoret = 150000;
-                                    }
-
                                     return p;
                                 });
                             }
@@ -1755,7 +1707,7 @@
                         try {
                             var parsed = JSON.parse(cached);
                             if (parsed.categories && parsed.categories.length > 0) mockCategories = parsed.categories;
-                            if (parsed.products && parsed.products.length > 0) mockProducts = parsed.parsedProducts || parsed.products;
+                            if (parsed.products && parsed.products.length > 0) mockProducts = parsed.products;
                             if (parsed.testimonials && parsed.testimonials.length > 0) mockTestimonials = parsed.testimonials;
                         } catch (e) { }
                     } else {
@@ -1778,6 +1730,11 @@
             });
 
             // ================= NAVIGATION =================
+            window.toggleAdminSidebar = function () {
+                var sidebar = document.querySelector('.sidebar');
+                if (sidebar) sidebar.classList.toggle('show');
+            };
+
             window.showAdminLogin = function () {
                 document.getElementById('landingPage').classList.add('d-none');
                 document.getElementById('mainApp').classList.add('d-none');
@@ -1914,7 +1871,7 @@
 
                 mockCategories.forEach(function (kat) {
                     var isActive = activePublicCategory === kat.nama ? 'active' : '';
-                    html += '<button class="category-btn ' + isActive + '" onclick="filterPublicCategory(\'' + escapeHTML(kat.nama) + '\', this)">' + escapeHTML(kat.nama) + '</button>';
+                    html += '<button class="category-btn ' + isActive + '" data-category="' + escapeHTML(kat.nama) + '" onclick="filterPublicCategory(this.getAttribute(\'data-category\'), this)">' + escapeHTML(kat.nama) + '</button>';
                 });
 
                 container.innerHTML = html;
@@ -2034,14 +1991,6 @@
                     // Koreksi otomatis jika harga coret tersimpan dalam skala kecil (misal 50 dibanding 25000)
                     if (hCoret > 0 && hCoret < 1000 && hUtama >= 1000) {
                         hCoret = hCoret * 1000;
-                    }
-
-                    // JAMINAN MUTLAK PERMANEN UNTUK PHOTO SELECTION & CREATE INVOICE
-                    if (pNamaLower.includes('photo selection') && (hCoret <= hUtama || !hCoret)) {
-                        hCoret = 50000;
-                    }
-                    if (pNamaLower.includes('create invoice') && (hCoret <= hUtama || !hCoret)) {
-                        hCoret = 150000;
                     }
 
                     var diskonBadgeHtml = '';
@@ -2341,6 +2290,17 @@
                     if (result.isConfirmed) {
                         mockCategories = mockCategories.filter(function (x) { return x.id !== id; });
                         renderKategoriTable();
+
+                        fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'deleteKategori', payload: { id: id } }),
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                        }).then(function () {
+                            loadDataFromDatabase();
+                        }).catch(function (err) {
+                            console.error('Delete kategori failed:', err);
+                        });
+
                         Swal.fire('Terhapus!', 'Kategori telah dihapus.', 'success');
                     }
                 });
@@ -2540,6 +2500,17 @@
                     if (result.isConfirmed) {
                         mockProducts = mockProducts.filter(function (x) { return x.id !== id; });
                         renderProdukTable();
+
+                        fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'deleteProduk', payload: { id: id } }),
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                        }).then(function () {
+                            loadDataFromDatabase();
+                        }).catch(function (err) {
+                            console.error('Delete produk failed:', err);
+                        });
+
                         Swal.fire('Terhapus!', 'Produk telah dihapus.', 'success');
                     }
                 });
