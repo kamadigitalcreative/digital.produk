@@ -927,9 +927,9 @@
 
 <body>
 
-    <!-- TOMBOL TEMA (DARK MODE) -->
-    <button id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-light shadow-sm"
-        style="position: fixed; top: 20px; right: 20px; z-index: 1000; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+    <!-- TOMBOL TEMA (DARK MODE FLOATING) -->
+    <button id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-light shadow-lg"
+        style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(0,0,0,0.1); backdrop-filter: blur(8px);" title="Ganti Mode Gelap/Terang">
         <i class="fas fa-moon" id="themeIcon"></i>
     </button>
 
@@ -1300,10 +1300,10 @@
                     <button class="btn btn-outline-secondary btn-sm" onclick="goBackToLanding()"><i
                             class="fas fa-external-link-alt"></i> Lihat Toko</button>
                 </div>
-                <div class="d-flex align-items-center">
-                    <span class="me-2 text-muted"><span id="displayUser">Admin</span></span>
-                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
-                        style="width: 35px; height: 35px;" id="userAvatarIcon">A</div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-muted fw-semibold" style="font-size: 0.9rem;"><span id="displayUser">Admin</span></span>
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                        style="width: 36px; height: 36px; flex-shrink: 0;" id="userAvatarIcon">A</div>
                 </div>
             </header>
 
