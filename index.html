@@ -2750,32 +2750,10 @@
             window.buyProduct = function (id) {
                 var p = mockProducts.find(x => x.id === id);
                 if (p) {
-                    p.terjual = (p.terjual || 0) + 1;
-                    if (p.stok && p.stok > 0) p.stok -= 1;
-                    renderPublicProducts();
-
                     // Cek parameter ref dari URL atau localStorage (HANYA jika ada referral aktif)
                     var urlParams = new URLSearchParams(window.location.search);
                     var currentUrlRef = urlParams.get('ref') || urlParams.get('refCode') || urlParams.get('referral');
                     var refCode = currentUrlRef ? currentUrlRef.trim().toUpperCase() : (localStorage.getItem('kama_ref_code') || 'DIRECT');
-
-                    // Track transaction on backend
-                    if (SCRIPT_URL && SCRIPT_URL !== 'ISI_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI') {
-                        fetch(SCRIPT_URL, {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                action: 'trackSale',
-                                payload: {
-                                    refCode: refCode,
-                                    idProduk: p.id,
-                                    namaProduk: p.nama,
-                                    harga: parseNumeric(p.harga),
-                                    jumlah: 1
-                                }
-                            }),
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-                        }).catch(function(e) { console.error('Track sale error:', e); });
-                    }
 
                     var paymentUrl = '';
                     var rawLink = (p.link || '').trim();
