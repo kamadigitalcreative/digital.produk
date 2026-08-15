@@ -2943,7 +2943,10 @@
             }
 
             window.buyProduct = function (id) {
-                var p = mockProducts.find(x => x.id === id);
+                var targetId = String(id);
+                var list = (mockProducts && mockProducts.length > 0) ? mockProducts : defaultProducts;
+                var p = list.find(x => String(x.id) === targetId) || defaultProducts.find(x => String(x.id) === targetId);
+
                 if (p) {
                     // Cek parameter ref dari URL atau localStorage (HANYA jika ada referral aktif)
                     var urlParams = new URLSearchParams(window.location.search);
@@ -2975,13 +2978,19 @@
 
             var modalPublicDetailObj;
             window.openPublicDetail = function (id) {
-                if (!modalPublicDetailObj) modalPublicDetailObj = new bootstrap.Modal(document.getElementById('modalPublicDetail'));
-                var p = mockProducts.find(x => x.id === id);
+                if (!id) return;
+                var targetId = String(id);
+                var list = (mockProducts && mockProducts.length > 0) ? mockProducts : defaultProducts;
+                var p = list.find(x => String(x.id) === targetId) || defaultProducts.find(x => String(x.id) === targetId);
                 if (!p) return;
 
-                document.getElementById('detailKategori').innerText = p.kategori;
-                document.getElementById('detailNama').innerText = p.nama;
-                document.getElementById('detailDeskripsi').innerText = p.deskripsi;
+                if (!modalPublicDetailObj) {
+                    modalPublicDetailObj = new bootstrap.Modal(document.getElementById('modalPublicDetail'));
+                }
+
+                document.getElementById('detailKategori').innerText = p.kategori || 'Umum';
+                document.getElementById('detailNama').innerText = p.nama || '';
+                document.getElementById('detailDeskripsi').innerText = p.deskripsi || '';
 
                 if (p.hargaCoret > 0) {
                     document.getElementById('detailHargaCoret').innerText = formatRupiah(p.hargaCoret);
@@ -3500,7 +3509,8 @@
                 });
 
                 if (id) {
-                    var p = mockProducts.find(function (x) { return x.id === id; });
+                    var targetId = String(id);
+                    var p = mockProducts.find(function (x) { return String(x.id) === targetId; }) || defaultProducts.find(function (x) { return String(x.id) === targetId; });
                     if (p) {
                         document.getElementById('prodId').value = p.id;
                         document.getElementById('prodNama').value = p.nama;
