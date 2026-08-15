@@ -2820,13 +2820,36 @@
             window.formatImageUrl = function (url) {
                 if (!url) return '';
                 url = String(url).trim();
-                if (url.includes(',') && !url.startsWith('data:')) url = url.split(',')[0].trim();
+
+                // 1. Ekstrak dari tag HTML <img src="..."> jika user menempelkan kode embed HTML ImgBB
+                var htmlSrcMatch = url.match(/src=["']([^"']+)["']/i);
+                if (htmlSrcMatch && htmlSrcMatch[1]) {
+                    url = htmlSrcMatch[1].trim();
+                }
+
+                // 2. Ekstrak dari tag BBCode [img]...[/img] jika user menempelkan BBCode ImgBB
+                var bbMatch = url.match(/\[img\](.*?)\[\/img\]/i);
+                if (bbMatch && bbMatch[1]) {
+                    url = bbMatch[1].trim();
+                }
+
+                // 3. Jika ada multiple URL dipisah koma (dan bukan base64 data:), ambil yang pertama
+                if (url.includes(',') && !url.startsWith('data:')) {
+                    url = url.split(',')[0].trim();
+                }
+
                 if (!url || url === '#' || url === 'undefined' || url === 'null') return '';
 
-                // Extract Google Drive File ID from various share/view URL formats
+                // 4. Konversi Google Drive URL format share/view ke direct link lh3
                 var driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
                 if (driveMatch && driveMatch[1]) {
                     return 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                }
+
+                // 5. Pembersihan URL jika tertempel spasi/karakter tak sengaja
+                var httpMatch = url.match(/(https?:\/\/[^\s"'<>\(\)]+)/i);
+                if (httpMatch && httpMatch[1]) {
+                    url = httpMatch[1];
                 }
 
                 return url;
@@ -3383,15 +3406,28 @@
 
             window.addGambarLink = function () {
                 var input = document.getElementById('prodGambarLinkInput');
-                var url = input ? input.value.trim() : '';
-                if (!url) {
+                var rawUrl = input ? input.value.trim() : '';
+                if (!rawUrl) {
                     Swal.fire('Peringatan', 'Masukkan URL foto yang valid.', 'warning');
                     return;
                 }
+
+                var cleanedUrl = formatImageUrl(rawUrl);
+
+                // Cek jika pengguna memasukkan link halaman viewer ImgBB (ibb.co/xxxx) dan bukannya direct link (i.ibb.co/xxxx/gambar.jpg)
+                if (rawUrl.includes('ibb.co/') && !cleanedUrl.includes('i.ibb.co/')) {
+                    Swal.fire({
+                        title: 'Petunjuk Link ImgBB',
+                        html: 'Anda menempelkan link halaman ImgBB (<code>ibb.co</code>).<br><br>Agar gambar dapat langsung muncul di halaman web, di ImgBB silakan pilih <b>Direct Links / Link Langsung</b> (berawalan <code>https://i.ibb.co/...</code>).',
+                        icon: 'info',
+                        confirmButtonText: 'Saya Mengerti'
+                    });
+                }
+
                 modalImagesList.push({
                     type: 'url',
-                    url: url,
-                    previewUrl: url
+                    url: cleanedUrl || rawUrl,
+                    previewUrl: cleanedUrl || rawUrl
                 });
                 if (input) input.value = '';
                 renderImagePreviews();
