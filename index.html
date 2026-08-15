@@ -435,20 +435,22 @@
             background: var(--accent-gradient);
         }
 
-        /* Hero Section Styling */
+        /* Hero Section Styling - Compact & Space Efficient */
         .hero-section {
             background: var(--hero-bg);
             border-bottom: 1px solid var(--border-color);
-            border-radius: 0 0 28px 28px;
+            border-radius: 0 0 24px 24px;
+            padding-top: 1.25rem !important;
+            padding-bottom: 1.25rem !important;
         }
 
         .hero-pill-badge {
             background: rgba(99, 102, 241, 0.12);
             border: 1px solid rgba(99, 102, 241, 0.25);
             color: #6366f1;
-            padding: 6px 18px;
+            padding: 4px 14px;
             border-radius: 30px;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             font-weight: 700;
         }
 
@@ -485,24 +487,28 @@
         }
 
         .hero-title {
-            font-size: 2.5rem;
+            font-size: 2.1rem;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            line-height: 1.25;
+            letter-spacing: -0.4px;
+            line-height: 1.2;
         }
 
         @media (max-width: 768px) {
             .hero-title {
-                font-size: 1.85rem;
+                font-size: 1.6rem;
+            }
+            .hero-section {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
             }
         }
 
         .stat-pill {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 8px 18px;
+            padding: 6px 14px;
             border-radius: 30px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-color);
             box-shadow: var(--shadow-sm);
         }
@@ -1139,35 +1145,35 @@
             </div>
         </div>
 
-        <!-- Hero Banner Section -->
-        <div class="hero-section text-center py-5 position-relative overflow-hidden mb-4">
-            <div class="container position-relative z-1 py-3">
-                <span class="hero-pill-badge d-inline-flex align-items-center gap-2 mb-3">
+        <!-- Hero Banner Section (Compact) -->
+        <div class="hero-section text-center position-relative overflow-hidden mb-2">
+            <div class="container position-relative z-1 py-1">
+                <span class="hero-pill-badge d-inline-flex align-items-center gap-2 mb-2">
                     <span class="pulse-dot"></span> ⚡ Platform Produk Digital & Template #1
                 </span>
-                <h1 class="hero-title mb-3">
+                <h1 class="hero-title mb-2">
                     Solusi Kreatif & Digital <span class="text-gradient">Instant Access</span>
                 </h1>
-                <p class="hero-subtitle text-muted mx-auto mb-4" style="max-width: 660px; font-size: 1.05rem;">
+                <p class="hero-subtitle text-muted mx-auto mb-3" style="max-width: 660px; font-size: 0.95rem;">
                     Dapatkan segala kebutuhan anda dengan desain premium, tools produktivitas, dan lisensi resmi
                     dalam hitungan detik.
                 </p>
 
-                <div class="hero-stats-grid d-flex justify-content-center flex-wrap gap-2 gap-md-3 mt-4">
-                    <div class="stat-pill"><i class="fas fa-box-open text-primary me-2"></i><strong>200+</strong>
+                <div class="hero-stats-grid d-flex justify-content-center flex-wrap gap-2 mt-2">
+                    <div class="stat-pill"><i class="fas fa-box-open text-primary me-1.5"></i><strong>200+</strong>
                         Produk Terjual</div>
-                    <div class="stat-pill"><i class="fas fa-users text-success me-2"></i><strong>100+</strong>
+                    <div class="stat-pill"><i class="fas fa-users text-success me-1.5"></i><strong>100+</strong>
                         Pembeli Puas</div>
-                    <div class="stat-pill"><i class="fas fa-star text-warning me-2"></i><strong>4.9/5</strong> Rating
+                    <div class="stat-pill"><i class="fas fa-star text-warning me-1.5"></i><strong>4.9/5</strong> Rating
                         Pelanggan</div>
-                    <div class="stat-pill"><i class="fas fa-shield-alt text-info me-2"></i><strong>100%</strong> Garansi
+                    <div class="stat-pill"><i class="fas fa-shield-alt text-info me-1.5"></i><strong>100%</strong> Garansi
                         Uang Kembali</div>
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="container mt-5">
+        <div class="container mt-3">
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                 <!-- Categories -->
                 <div class="category-filter flex-grow-1 mb-0 pb-2" id="publicCategoryContainer">
